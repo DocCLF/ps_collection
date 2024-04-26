@@ -39,10 +39,14 @@ function IBM_Expand_HyperswapVolume {
     $CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
     Start-Sleep -Seconds 3
     foreach($info in $CollectVolInfo) {
-        if($info | Select-String -Pattern "^\d+\s+$FilterName(\w+|\d+)") {
-            $Vol_Info = ($info | Select-String -Pattern "^\d+\s+$FilterName(\w+|\d+)" -AllMatches).Matches.Groups.Value[1]
-            Write-host "svctask expandvolume -size $expand_size -unit $unit $Vlo_Info"
+        $Vol_Info = ($info | Select-String -Pattern '^\d+\s+(\w+_\d+)' -AllMatches).Matches.Groups.Value[1]
+        Write-Debug -Message $Vol_Info
+        if($Vol_Info -like "$($FilterName)*"){
+            <# To prevent duplicate entries #>
+            if($Temp -eq $Vol_Info){break}
+            <# Returns the command for the cli. #>
+            Write-Host "svctask expandvolume -size $expand_size -unit $unit $Vol_Info"
         }
+        $Temp = $Vol_Info
     }
-   
 }
