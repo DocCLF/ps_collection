@@ -50,6 +50,7 @@ function IBM_Expand_HyperswapVolume {
         <# Copy the current value to the temp value for the duplicate check #>
         $TD_Temp = $TD_Vol_Info
     }
+    Write-Host "`n#Use the expandvolume command ONLY to expand the size of a HyperSwap® volume by a specified capacity.`n" -ForegroundColor Yellow
     <# Tidying up for the conscience #>
     Clear-Variable TD* -Scope Global;
 }
