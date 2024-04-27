@@ -15,7 +15,7 @@ function IBM_Expand_HyperswapVolume {
     .EXAMPLE
         IBM_Expand_HyperswapVolume -UserName superuser -DeviceIP 192.16.12.1 -expand_size 128849018880 -unit b
 
-        Result: svctask expandvolume -size 128849018880 -unit b BootVolume_01    
+        Result: svctask expandvolume -size 10 -unit gb ExampleVolume_01    
     .EXAMPLE
         IBM_Expand_HyperswapVolume -UserName superuser -DeviceIP 192.16.12.1 -FilterName Volu -expand_size 128849018880 -unit b
 
@@ -36,17 +36,20 @@ function IBM_Expand_HyperswapVolume {
         [string]$unit
     )
  
-    $CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
+    $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
     Start-Sleep -Seconds 3
-    foreach($info in $CollectVolInfo) {
-        $Vol_Info = ($info | Select-String -Pattern '^\d+\s+(\w+_\d+)' -AllMatches).Matches.Groups.Value[1]
+    foreach($TD_info in $TD_CollectVolInfo) {
+        $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+\s+(\w+_\d+)' -AllMatches).Matches.Groups.Value[1]
         Write-Debug -Message $Vol_Info
-        if($Vol_Info -like "$($FilterName)*"){
+        if($TD_Vol_Info -like "$($FilterName)*"){
             <# To prevent duplicate entries #>
-            if($Temp -eq $Vol_Info){break}
+            if($TD_Temp -eq $TD_Vol_Info){break}
             <# Returns the command for the cli. #>
-            Write-Host "svctask expandvolume -size $expand_size -unit $unit $Vol_Info"
+            Write-Host "svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info"
         }
-        $Temp = $Vol_Info
+        <# Copy the current value to the temp value for the duplicate check #>
+        $TD_Temp = $TD_Vol_Info
     }
+    <# Tidying up for the conscience #>
+    Clear-Variable TD* -Scope Global;
 }
