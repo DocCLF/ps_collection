@@ -40,11 +40,11 @@ function IBM_Expand_VdiskSize {
         [string]$UserName,
         [Parameter(Mandatory,ValueFromPipeline)]
         [string]$DeviceIP,
-        [Parameter(ValueFromPipeline)]
+        [Parameter(Mandatory,ValueFromPipeline)]
         [string]$FilterName,
-        [Parameter(Mandatory,ValueFromPipeline)]
+        [Parameter(ValueFromPipeline)]
         [Int32]$expand_size,
-        [Parameter(Mandatory,ValueFromPipeline)]
+        [Parameter(ValueFromPipeline)]
         [ValidateSet("b","kb","mb","gb","tb","pb")]
         [string]$unit
     )
@@ -53,18 +53,24 @@ function IBM_Expand_VdiskSize {
     Start-Sleep -Seconds 3
     foreach($TD_info in $TD_CollectVolInfo) {
         $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+\s+(\w+_\d+)' -AllMatches).Matches.Groups.Value[1]
-        Write-Debug -Message $Vol_Info
+        Write-Debug -Message $TD_Vol_Info
         if($TD_Vol_Info -like "$($FilterName)*"){
             <# To prevent duplicate entries #>
             if($TD_Temp -eq $TD_Vol_Info){break}
             <# Returns the command for the cli. #>
-            Write-Host "svctask expandvdisksize -size $expand_size -unit $unit $TD_Vol_Info"
+            if($expand_size -ne "") {
+                if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
+                Write-Host "svctask expandvdisksize -size $expand_size -unit $unit $TD_Vol_Info"
+            }else {
+                Write-Host "These volumes were found with the specified filters:`n"
+            }
+            
         }
         <# Copy the current value to the temp value for the duplicate check #>
         $TD_Temp = $TD_Vol_Info
     }
     Write-Host "`n`nRemember:`n1. You cannot resize (expand) an image mode volume.`n2. You cannot resize (expand) a volume if cloud snapshot is enabled on that volume.`n3. You cannot specify expandvdisksize -rsize to expand (resize) a thin or compressed volume copy that is in a data reduction pool.`n4. You cannot specify expandvdisksize -mdisk to resize (expand) a volume when a volume is being migrated." -ForegroundColor Yellow
-    Write-Host "`nAnd last but not least, if you are not sure then: 'RTFM'!" -ForegroundColor Red
+    Write-Host "`n#And last but not least, if you are not sure then please: 'RTFM'! ;) " -ForegroundColor Red
     
     <# Tidying up for the conscience #>
     Clear-Variable TD* -Scope Global;

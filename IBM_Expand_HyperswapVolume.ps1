@@ -41,23 +41,31 @@ function IBM_Expand_HyperswapVolume {
         [ValidateSet("b","kb","mb","gb","tb","pb")]
         [string]$unit
     )
- 
+    
+    $ErrorActionPreference="SilentlyContinue"
+
     $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
     Start-Sleep -Seconds 3
     foreach($TD_info in $TD_CollectVolInfo) {
         $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+\s+(\w+_\d+)' -AllMatches).Matches.Groups.Value[1]
-        Write-Debug -Message $Vol_Info
+        Write-Debug -Message $TD_Vol_Info
         if($TD_Vol_Info -like "$($FilterName)*"){
             <# To prevent duplicate entries #>
             if($TD_Temp -eq $TD_Vol_Info){break}
+
             <# Returns the command for the cli. #>
-            Write-Host "svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info"
+            if($expand_size -ne "") {
+                if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
+                Write-Host "svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info"
+            }else {
+                Write-Host "These volumes were found with the specified filters:`n"
+            }
         }
         <# Copy the current value to the temp value for the duplicate check #>
         $TD_Temp = $TD_Vol_Info
     }
     Write-Host "`n#Use the expandvolume command ONLY to expand the size of a HyperSwap® volume by a specified capacity.`n" -ForegroundColor Yellow
-    Write-Host "`n#And last but not least, if you are not sure then: 'RTFM'!" -ForegroundColor Red
+    Write-Host "`n#And last but not least, if you are not sure then please: 'RTFM'! ;) " -ForegroundColor Red
     <# Tidying up for the conscience #>
     Clear-Variable TD* -Scope Global;
 }
