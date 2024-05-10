@@ -25,7 +25,13 @@ function IBM_Expand_HyperswapVolume {
     .EXAMPLE
         IBM_Expand_HyperswapVolume -UserName superuser -DeviceIP 192.16.12.1 -FilterName Volu -expand_size 128849018880 -unit b
 
-        Result: svctask expandvolume -size 128849018880 -unit b VolumeName_01        
+        Result: svctask expandvolume -size 128849018880 -unit b VolumeName_01     
+    .EXAMPLE
+        IBM_Expand_HyperswapVolume -UserName superuser -DeviceIP 192.16.12.1 -FilterName *Volu*
+
+        Result: VolumeName_01
+                11-VolName_01
+                VolumeName_02   
     #>
     [CmdletBinding()]
     param (
@@ -36,7 +42,7 @@ function IBM_Expand_HyperswapVolume {
         [Parameter(Mandatory,ValueFromPipeline)]
         [string]$FilterName,
         [Parameter(ValueFromPipeline)]
-        [Int32]$expand_size,
+        [Int32]$expand_size = 0,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("b","kb","mb","gb","tb","pb")]
         [string]$unit
@@ -47,14 +53,13 @@ function IBM_Expand_HyperswapVolume {
     $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
     Start-Sleep -Seconds 3
     foreach($TD_info in $TD_CollectVolInfo) {
-        $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+\s+(\w+_\d+)' -AllMatches).Matches.Groups.Value[1]
+        $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+\s+([a-zA-Z0-9_-]*)\s+' -AllMatches).Matches.Groups.Value[1]
         Write-Debug -Message $TD_Vol_Info
         if($TD_Vol_Info -like "$($FilterName)*"){
             <# To prevent duplicate entries #>
             if($TD_Temp -eq $TD_Vol_Info){break}
-
             <# Returns the command for the cli. #>
-            if($expand_size -ne "") {
+            if($expand_size -gt 0) {
                 if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
                 Write-Host "svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info"
             }else {
