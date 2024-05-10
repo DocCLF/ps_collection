@@ -58,7 +58,8 @@ function IBM_Expand_HyperswapVolume {
                 if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
                 Write-Host "svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info"
             }else {
-                Write-Host "These volumes were found with the specified filters:`n"
+                
+                Write-host $TD_Vol_Info
             }
         }
         <# Copy the current value to the temp value for the duplicate check #>
