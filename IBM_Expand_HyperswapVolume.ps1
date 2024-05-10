@@ -33,11 +33,11 @@ function IBM_Expand_HyperswapVolume {
         [string]$UserName,
         [Parameter(Mandatory,ValueFromPipeline)]
         [string]$DeviceIP,
-        [Parameter(ValueFromPipeline)]
+        [Parameter(Mandatory,ValueFromPipeline)]
         [string]$FilterName,
-        [Parameter(Mandatory,ValueFromPipeline)]
+        [Parameter(ValueFromPipeline)]
         [Int32]$expand_size,
-        [Parameter(Mandatory,ValueFromPipeline)]
+        [Parameter(ValueFromPipeline)]
         [ValidateSet("b","kb","mb","gb","tb","pb")]
         [string]$unit
     )
