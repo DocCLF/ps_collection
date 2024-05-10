@@ -49,6 +49,8 @@ function IBM_Expand_VdiskSize {
         [string]$unit
     )
  
+    $ErrorActionPreference="SilentlyContinue"
+
     $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
     Start-Sleep -Seconds 3
     foreach($TD_info in $TD_CollectVolInfo) {
