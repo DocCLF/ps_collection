@@ -17,31 +17,60 @@ function IBM_Host_Volume_Map {
         [Parameter(Mandatory,ValueFromPipeline)]
         [string]$UserName,
         [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$DeviceIP,
-        [Parameter(ValueFromPipeline)]
-        [string]$FilterName
+        [string]$DeviceIP
     )
     begin{
+
         $TD_Mappingresault = @()
-        $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim : $FilterName"
+        [int]$nbr=0
+
+        $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
+        $i = $TD_CollectVolInfo.Count
+
+        0..$i |ForEach-Object {
+            if($TD_CollectVolInfo[$_] -match '^id'){
+                $TD_Resaults = $TD_CollectVolInfo | Select-Object -Skip ($_ +1)
+                $i = $_
+            }
+        }       
     }
     process{
         foreach($line in $TD_CollectVolInfo){
-            if(($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0] -eq "id"){Write-Host "<###### --- Ende --- ######>" -ForegroundColor Red;break}
-            $TD_SplitInfos = "" | Select-Object HostID,HostName,HostCluster,VolumeID,VolumeName,UID
-            $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
-            $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
-            $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
-            $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[3]
-            $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[4]
-            $TD_SplitInfos.UID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[5]
-            
-            $TD_Mappingresault += $TD_SplitInfos
-        }
-    }
-    end{
+            $TD_SplitInfos = "" | Select-Object HostID,HostName,HostCluster,VolumeID,VolumeName,UID,Capacity
 
+            <# only the Hostblock #>
+            if($i -ge 1){
+
+                $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
+                $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
+                $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
+                $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[3]
+                $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[4]
+                $TD_SplitInfos.UID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[5]
+                
+                foreach ($resault in $TD_Resaults) {
+
+                    if(($TD_SplitInfos.UID) -eq (($resault | Select-String -Pattern '([0-9A-F]{32})' -AllMatches).Matches.Groups[1].Value)){
+                        $TD_SplitInfos.Capacity = ($resault | Select-String -Pattern '(\d+\.\d+[B-T]+)' -AllMatches).Matches.Groups[1].Value
+                        break
+                    }
+                }
+
+                $TD_Mappingresault += $TD_SplitInfos
+                $i--
+            }
+
+            $nbr++
+            $Completed = ($nbr/$TD_CollectVolInfo.Count) * 100
+            Write-Progress -Activity "Create the list" -Status "Progress:" -PercentComplete $Completed
+        }
+            
+    }
+
+    
+    end{
+        return $TD_Mappingresault
     }
     
 }
