@@ -14,17 +14,23 @@ function IBM_Host_Volume_Map {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$UserName,
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$DeviceIP
+       # [Parameter(Mandatory,ValueFromPipeline)]
+       # [string]$UserName,
+       # [Parameter(Mandatory,ValueFromPipeline)]
+       # [string]$DeviceIP,
+        [Parameter(ValueFromPipeline)]
+        [string]$FilterType = "Nofilter",
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("yes","no")]
+        [string]$Export = "yes"
     )
     begin{
 
         $TD_Mappingresault = @()
         [int]$nbr=0
 
-        $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+        #$TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+        $TD_CollectVolInfo = Get-Content -Path ".\lshostvdiskmap.txt"
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
         $i = $TD_CollectVolInfo.Count
 
@@ -41,10 +47,20 @@ function IBM_Host_Volume_Map {
 
             <# only the Hostblock #>
             if($i -ge 1){
+                if(($TD_HostIDold) -ne (($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0])-and ($FilterType -eq "Host")){
+                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
+                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
+                    $TD_HostIDold = $TD_SplitInfos.HostID
 
-                $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
-                $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
-                $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
+                }elseif (($TD_HostClusterOld) -ne (($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10])-and ($FilterType -eq "Hostcluster")){
+                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
+                    $TD_HostClusterOld = $TD_SplitInfos.HostCluster
+                }
+                elseif (($FilterType -eq "Nofilter")) {
+                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
+                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
+                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
+                }
                 $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[3]
                 $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[4]
                 $TD_SplitInfos.UID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[5]
@@ -60,7 +76,7 @@ function IBM_Host_Volume_Map {
                 $TD_Mappingresault += $TD_SplitInfos
                 $i--
             }
-
+            
             $nbr++
             $Completed = ($nbr/$TD_CollectVolInfo.Count) * 100
             Write-Progress -Activity "Create the list" -Status "Progress:" -PercentComplete $Completed
@@ -70,6 +86,10 @@ function IBM_Host_Volume_Map {
 
     
     end{
+        if($Export -eq "yes"){
+            $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result.csv -NoTypeInformation
+        }
+        
         return $TD_Mappingresault
     }
     
