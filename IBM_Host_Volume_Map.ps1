@@ -14,10 +14,10 @@ function IBM_Host_Volume_Map {
     #>
     [CmdletBinding()]
     param (
-       # [Parameter(Mandatory,ValueFromPipeline)]
-       # [string]$UserName,
-       # [Parameter(Mandatory,ValueFromPipeline)]
-       # [string]$DeviceIP,
+        [Parameter(Mandatory,ValueFromPipeline)]
+        [string]$UserName,
+        [Parameter(Mandatory,ValueFromPipeline)]
+        [string]$DeviceIP,
         [Parameter(ValueFromPipeline)]
         [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
@@ -29,8 +29,7 @@ function IBM_Host_Volume_Map {
         $TD_Mappingresault = @()
         [int]$nbr=0
 
-        #$TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
-        $TD_CollectVolInfo = Get-Content -Path ".\lshostvdiskmap.txt"
+        $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
         $i = $TD_CollectVolInfo.Count
 
