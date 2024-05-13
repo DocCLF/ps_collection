@@ -25,7 +25,7 @@ function IBM_Host_Volume_Map {
         [string]$Export = "yes"
     )
     begin{
-
+        $ErrorActionPreference="SilentlyContinue"
         $TD_Mappingresault = @()
         [int]$nbr=0
 
@@ -44,25 +44,28 @@ function IBM_Host_Volume_Map {
         foreach($line in $TD_CollectVolInfo){
             $TD_SplitInfos = "" | Select-Object HostID,HostName,HostCluster,VolumeID,VolumeName,UID,Capacity
 
+            if ((($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0])-eq "") {
+                break
+            }
             <# only the Hostblock #>
             if($i -ge 1){
-                if(($TD_HostIDold) -ne (($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0])-and ($FilterType -eq "Host")){
-                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
-                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
+                if(($TD_HostIDold) -ne (($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0])-and ($FilterType -eq "Host")){
+                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
+                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[1]
                     $TD_HostIDold = $TD_SplitInfos.HostID
 
-                }elseif (($TD_HostClusterOld) -ne (($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10])-and ($FilterType -eq "Hostcluster")){
-                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
+                }elseif (($TD_HostClusterOld) -ne (($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10])-and ($FilterType -eq "Hostcluster")){
+                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10]
                     $TD_HostClusterOld = $TD_SplitInfos.HostCluster
                 }
                 elseif (($FilterType -eq "Nofilter")) {
-                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[0]
-                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[1]
-                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[10]
+                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
+                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[1]
+                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10]
                 }
-                $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[3]
-                $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[4]
-                $TD_SplitInfos.UID = ($line | Select-String -Pattern '\b(\w+)' -AllMatches).Matches.Value[5]
+                $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
+                $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
+                $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
                 
                 foreach ($resault in $TD_Resaults) {
 
