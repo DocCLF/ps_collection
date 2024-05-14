@@ -42,7 +42,7 @@ function IBM_Expand_HyperswapVolume {
         [Parameter(Mandatory,ValueFromPipeline)]
         [string]$FilterName,
         [Parameter(ValueFromPipeline)]
-        [Int32]$expand_size = 0,
+        [Int64]$expand_size = 0,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("b","kb","mb","gb","tb","pb")]
         [string]$unit
