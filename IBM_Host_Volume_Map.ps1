@@ -109,13 +109,12 @@ function IBM_Host_Volume_Map {
             Write-Progress -Activity "Create the list" -Status "Progress:" -PercentComplete $Completed
         }
     }
-  
     end{
         <# exported to .\Host_Volume_Map_Result.csv #>
         if($Export -eq "yes"){
             $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result.csv -NoTypeInformation
+        }else {
+            return $TD_Mappingresault
         }
-        return $TD_Mappingresault
     }
-    
 }
