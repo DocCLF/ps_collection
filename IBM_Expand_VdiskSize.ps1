@@ -50,7 +50,8 @@ function IBM_Expand_VdiskSize {
     )
     <# suppresses error messages #>
     $ErrorActionPreference="SilentlyContinue"
-
+    <# count to split into 10-liner #>
+    [Int16]$i=0
     $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
     Start-Sleep -Seconds 3
     foreach($TD_info in $TD_CollectVolInfo) {
@@ -63,10 +64,12 @@ function IBM_Expand_VdiskSize {
             if($expand_size -gt 0) {
                 if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
                 Write-Host "svctask expandvdisksize -size $expand_size -unit $unit $TD_Vol_Info"
+                <# split with 2 line of nothing and reset i #>
+                $i++
+                if($i -eq 10){Write-Host "`n `n"; $i = 0}
             }else {
                 Write-host $TD_Vol_Info
-            }
-            
+            }  
         }
         <# Copy the current value to the temp value for the duplicate check #>
         $TD_Temp = $TD_Vol_Info
