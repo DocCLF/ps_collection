@@ -47,7 +47,7 @@ function IBM_Expand_HyperswapVolume {
         [ValidateSet("b","kb","mb","gb","tb","pb")]
         [string]$unit
     )
-    
+    <# suppresses error messages #>
     $ErrorActionPreference="SilentlyContinue"
 
     $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
