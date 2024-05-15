@@ -26,7 +26,7 @@ function IBM_Expand_VdiskSize {
     .LINK
         https://www.ibm.com/docs/en/flashsystem-5x00/8.6.x?topic=vc-expandvdisksize
     .EXAMPLE
-        IBM_Expand_VdiskSize -UserName superuser -DeviceIP 192.16.12.1 -expand_size 128849018880 -unit b
+        IBM_Expand_VdiskSize -UserName superuser -DeviceIP 192.16.12.1 -expand_size 10 -unit gb
 
         Result: svctask expandvdisksize -size 10 -unit gb ExampleVolume_01    
     .EXAMPLE
@@ -50,32 +50,33 @@ function IBM_Expand_VdiskSize {
     )
     <# suppresses error messages #>
     $ErrorActionPreference="SilentlyContinue"
+
     <# count to split into 10-liner #>
     [Int16]$i=0
-    $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk"
-    Start-Sleep -Seconds 3
+    $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk -delim :"
+    Start-Sleep -Seconds 2
     foreach($TD_info in $TD_CollectVolInfo) {
-        $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+\s+([a-zA-Z0-9_-]*)\s+' -AllMatches).Matches.Groups.Value[1]
+        $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+:([a-zA-Z0-9_-]*)' -AllMatches).Matches.Groups.Value[1]
         Write-Debug -Message $TD_Vol_Info
-        if($TD_Vol_Info -like "$($FilterName)*"){
+        if($TD_Vol_Info -like "$($FilterName)"){
             <# To prevent duplicate entries #>
             if($TD_Temp -eq $TD_Vol_Info){break}
             <# Returns the command for the cli. #>
             if($expand_size -gt 0) {
                 if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
                 Write-Host "svctask expandvdisksize -size $expand_size -unit $unit $TD_Vol_Info"
-                <# split with 2 line of nothing and reset i #>
-                $i++
-                if($i -eq 10){Write-Host "`n `n"; $i = 0}
             }else {
                 Write-host $TD_Vol_Info
             }  
+            <# split with 2 line of nothing and reset i #>
+            $i++
+            if($i -eq 10){Write-Host "`n `n"; $i = 0}
         }
         <# Copy the current value to the temp value for the duplicate check #>
         $TD_Temp = $TD_Vol_Info
     }
     Write-Host "`n`nRemember:`n1. You cannot resize (expand) an image mode volume.`n2. You cannot resize (expand) a volume if cloud snapshot is enabled on that volume.`n3. You cannot specify expandvdisksize -rsize to expand (resize) a thin or compressed volume copy that is in a data reduction pool.`n4. You cannot specify expandvdisksize -mdisk to resize (expand) a volume when a volume is being migrated." -ForegroundColor Yellow
-    Write-Host "`n#And last but not least, if you are not sure then please: 'RTFM'! ;) " -ForegroundColor Red
+    Write-Host "`nAnd last but not least, if you are not sure then please: 'RTFM'! ;) " -ForegroundColor Red
     
     <# Tidying up for the conscience #>
     Clear-Variable TD* -Scope Global;
