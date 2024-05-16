@@ -111,11 +111,17 @@ function IBM_Host_Volume_Map {
         }
     }
     end{
-        <# exported to .\Host_Volume_Map_Result.csv #>
+        <# export y or n #>
         if($Export -eq "yes"){
+            <# exported to .\Host_Volume_Map_Result.csv #>
             $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }else {
+            <# output on the promt #>
             return $TD_Mappingresault
         }
+        <# wait a moment #>
+        Start-Sleep -Seconds 1
+        <# Cleanup all TD* Vars #>
+        Clear-Variable TD* -Scope Global
     }
 }
