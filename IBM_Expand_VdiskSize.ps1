@@ -22,6 +22,7 @@ function IBM_Expand_VdiskSize {
 
         Only a user with the security administrator or the superuser role is permitted to use expandvdisksize to change the capacity of a Safeguarded backup copy.
     .NOTES
+        v1.0.1
         This function only supports IBM FlashStorage systems starting with version 8.3.x
     .LINK
         https://www.ibm.com/docs/en/flashsystem-5x00/8.6.x?topic=vc-expandvdisksize
@@ -46,7 +47,10 @@ function IBM_Expand_VdiskSize {
         [Int64]$expand_size = 0,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("b","kb","mb","gb","tb","pb")]
-        [string]$unit
+        [string]$unit,
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("yes","no")]
+        [string]$TD_export = "no"
     )
     <# suppresses error messages #>
     $ErrorActionPreference="SilentlyContinue"
@@ -65,6 +69,7 @@ function IBM_Expand_VdiskSize {
             if($expand_size -gt 0) {
                 if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
                 Write-Host "svctask expandvdisksize -size $expand_size -unit $unit $TD_Vol_Info"
+                if($TD_export -eq "yes"){"svctask expandvdisksize -size $expand_size -unit $unit $TD_Vol_Info" | Out-File -FilePath ".\Expand_VdiskSize.txt" -Append -}
             }else {
                 Write-host $TD_Vol_Info
             }  
