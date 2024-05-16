@@ -45,7 +45,10 @@ function IBM_Expand_HyperswapVolume {
         [Int64]$expand_size = 0,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("b","kb","mb","gb","tb","pb")]
-        [string]$unit
+        [string]$unit,
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("yes","no")]
+        [string]$TD_export = "no"
     )
     <# suppresses error messages #>
     $ErrorActionPreference="SilentlyContinue"
@@ -59,10 +62,12 @@ function IBM_Expand_HyperswapVolume {
         if($TD_Vol_Info -like "$($FilterName)"){
             <# To prevent duplicate entries #>
             if($TD_Temp -eq $TD_Vol_Info){break}
-            <# Returns the command for the cli. #>
+            <# Returns the command for the cli only if expand size is set #>
             if($expand_size -gt 0) {
                 if($unit -eq ""){Write-Host "If a expand size is specified, we also need a size specification of a unit such as kb,mb,gb,tb, etc.!" -ForegroundColor Red; Start-Sleep -Seconds 5; exit}
                 Write-Host "svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info"
+                <# export *txt without line split #>
+                if($TD_export -eq "yes"){"svctask expandvolume -size $expand_size -unit $unit $TD_Vol_Info " | Out-File -FilePath .\Expand_HYPSWP_Volume.txt -Append}
             }else {
                 Write-host $TD_Vol_Info
             }
