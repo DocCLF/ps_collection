@@ -3,7 +3,7 @@ function IBM_Host_Volume_Map {
     .SYNOPSIS
         Displays a list of host/cluster and there volume relationships
     .DESCRIPTION
-        v.1.0.1
+        v1.0.1
         This function displays a list of volume IDs, names and more. 
         These volumes are the volumes that are mapped to the specified host or hostcluster.  
     .NOTES
