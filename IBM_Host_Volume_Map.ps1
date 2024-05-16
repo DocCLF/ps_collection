@@ -1,14 +1,15 @@
 function IBM_Host_Volume_Map {
     <#
     .SYNOPSIS
-        Displays a list of host/cluster - volume relationships
+        Displays a list of host/cluster and there volume relationships
     .DESCRIPTION
-        A longer description of the function, follows
+        v.1.0.1
+        This function displays a list of volume IDs, names and more. 
+        These volumes are the volumes that are mapped to the specified host or hostcluster.  
     .NOTES
-        Tested with version IBM Spectrum Virtualize Software 7.8.x to 8.5.x
+        Tested with version IBM Spectrum Virtualize Software 7.8.x to 8.6.x
     .LINK
         https://github.com/DocCLF/ps_collection/blob/main/IBM_Host_Volume_Map.ps1
-        Specify a URI to a help page, this will show when Get-Help -Online is used.
     .EXAMPLE
         IBM_Host_Volume_Map -UserName monitor_user -DeviceIP 8.8.8.8
         HostID      : 91                                                                                                        
@@ -20,7 +21,7 @@ function IBM_Host_Volume_Map {
         Capacity    : 200.00GB  
     .EXAMPLE
         IBM_Host_Volume_Map -UserName monitor_user -DeviceIP 8.8.8.8 -FilterType Host -Export yes
-        Result filtered by host and exported to .\Host_Volume_Map_Result.csv
+        Result filtered by host and exported to .\Host_Volume_Map_Result_(current date).csv
     #>
     [CmdletBinding()]
     param (
@@ -112,7 +113,7 @@ function IBM_Host_Volume_Map {
     end{
         <# exported to .\Host_Volume_Map_Result.csv #>
         if($Export -eq "yes"){
-            $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result.csv -NoTypeInformation
+            $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }else {
             return $TD_Mappingresault
         }
