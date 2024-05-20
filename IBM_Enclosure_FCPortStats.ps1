@@ -38,7 +38,7 @@ function IBM_Enclosure_FCPortStats {
             [string]$TD_NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             [Int64]$TD_NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
             <# Card Info #>
-            [string]$TD_CardType = ($TD_CollectInfo|Select-String -Pattern '^type.*(FC)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_CardType = ($TD_CollectInfo|Select-String -Pattern '^type.*(\w+)' -AllMatches).Matches.Groups[1].Value
             [int]$TD_CardID = ($TD_CollectInfo|Select-String -Pattern '^type_id.*(\d)' -AllMatches).Matches.Groups[1].Value
             [int]$TD_PortID = ($TD_CollectInfo|Select-String -Pattern 'port\sid.*(\d)' -AllMatches).Matches.Groups[1].Value
             [Int64]$TD_WWPN = ($TD_CollectInfo|Select-String -Pattern 'wwpn.*0x([0-9a-f]+)' -AllMatches).Matches.Groups[1].Value
@@ -56,7 +56,7 @@ function IBM_Enclosure_FCPortStats {
             [int]$TD_SFPTemp = ($TD_CollectInfo|Select-String -Pattern 'tmp=""(\d+)""' -AllMatches).Matches.Groups[1].Value
             [int]$TD_TXPwr = ($TD_CollectInfo|Select-String -Pattern 'txpwr=""(\d+)""' -AllMatches).Matches.Groups[1].Value
             [int]$TD_RXPwr = ($TD_CollectInfo|Select-String -Pattern 'rxpwr=""(\d+)""' -AllMatches).Matches.Groups[1].Value
-            
+
         }
     }
     
