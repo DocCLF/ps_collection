@@ -26,34 +26,37 @@ function IBM_Enclosure_FCPortStats {
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
         <# Connect to Device and get all needed Data #>
-        $TD_CollectInfo = ssh $UserName@$DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done'
+        $TD_CollectInfos = ssh $UserName@$DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
         Start-Sleep -Seconds 1.5
     }
     
     process {
         <#  #>
-        foreach($TD_CollectLine in $TD_CollectInfo){
-            <# Node & Card Info#>
-            [string]$TD_Node
-            [string]$TD_CardType = ($TD_CollectLine|Select-String -Pattern '^type.*(FC)' -AllMatches).Matches.Groups[1].Value
-            [int]$TD_CardID
-            [int]$TD_PortID
-            [Int64]$TD_WWPN
+        foreach($TD_CollectInfo in $TD_CollectInfos){
+            <# Node Info#>
+            [int]$TD_NodeID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+            [Int64]$TD_NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
+            <# Card Info #>
+            [string]$TD_CardType = ($TD_CollectInfo|Select-String -Pattern '^type.*(FC)' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_CardID = ($TD_CollectInfo|Select-String -Pattern '^type_id.*(\d)' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortID = ($TD_CollectInfo|Select-String -Pattern 'port\sid.*(\d)' -AllMatches).Matches.Groups[1].Value
+            [Int64]$TD_WWPN = ($TD_CollectInfo|Select-String -Pattern 'wwpn.*0x([0-9a-f]+)' -AllMatches).Matches.Groups[1].Value
             <# diagnostics data #>
             <# Block 1#>
-            [int]$TD_LinkFailure
-            [int]$TD_LoseSync
-            [int]$TD_LoseSig
-            [int]$TD_PSErrCount
+            [int]$TD_LinkFailure = ($TD_CollectInfo|Select-String -Pattern 'lf=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_LoseSync = ($TD_CollectInfo|Select-String -Pattern 'lsy=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_LoseSig = ($TD_CollectInfo|Select-String -Pattern 'lsi=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PSErrCount = ($TD_CollectInfo|Select-String -Pattern 'pspe=""(\d+)""' -AllMatches).Matches.Groups[1].Value
             <# Block 2#>
-            [int]$TD_InvTransErr
-            [int]$TD_CRCErr
-            [int]$TD_ZeroBtB
+            [int]$TD_InvTransErr = ($TD_CollectInfo|Select-String -Pattern 'itw=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_CRCErr = ($TD_CollectInfo|Select-String -Pattern 'icrc=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_ZeroBtB = ($TD_CollectInfo|Select-String -Pattern 'bbcz=""(\d+)""' -AllMatches).Matches.Groups[1].Value
             <# Block 3#>
-            [int]$TD_SFPTemp
-            [int]$TD_TXPwr
-            [int]$TD_RXPwr
-
+            [int]$TD_SFPTemp = ($TD_CollectInfo|Select-String -Pattern 'tmp=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_TXPwr = ($TD_CollectInfo|Select-String -Pattern 'txpwr=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_RXPwr = ($TD_CollectInfo|Select-String -Pattern 'rxpwr=""(\d+)""' -AllMatches).Matches.Groups[1].Value
+            
         }
     }
     
