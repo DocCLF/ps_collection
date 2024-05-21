@@ -5,8 +5,13 @@ function IBM_DriveInfo {
     .DESCRIPTION
         Shows the most important information of the hard disks in my opinion and exports them if desired.
     .NOTES
-        Version: 1.0.1
         Tested from IBM Spectrum Virtualize 8.5.x in combination with pwsh 5.1 and 7.4
+    .NOTES
+        current Verion: 1.0.2
+        fix: TD_* Wildcard at Username, DeviceIP and Export
+        
+        old Version:
+        1.0.1 Initail Release
     .LINK
         IBM Link for lsvdisk: https://www.ibm.com/docs/en/flashsystem-5x00/8.5.x?topic=commands-lsdrive
         GitHub Link for Script support: https://github.com/DocCLF/ps_collection/blob/main/IBM_DriveInfo.ps1
@@ -47,7 +52,7 @@ function IBM_DriveInfo {
         [string]$TD_SlotOld = "0"
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
-        $TD_CollectInfos = ssh $UserName@$DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
         0..$TD_CollectInfos.count |ForEach-Object {
             <# Split the infos in 2 var #>
@@ -99,7 +104,7 @@ function IBM_DriveInfo {
     }
     end{
         <# export y or n #>
-        if($Export -eq "yes"){
+        if($TD_export -eq "yes"){
             <# exported to .\Drive_Overview_(Date).csv #>
             $TD_DriveOverview | Export-Csv -Path .\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }else {
