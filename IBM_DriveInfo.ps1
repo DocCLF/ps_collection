@@ -12,7 +12,7 @@ function IBM_DriveInfo {
         GitHub Link for Script support: https://github.com/DocCLF/ps_collection/blob/main/IBM_DriveInfo.ps1
     .EXAMPLE
         IBM_DriveInfo -TD_UserName MoUser -TD_DeviceIP 123.234.345.456 -TD_export no
-        Result for: rz1-N1_FLS95mimix
+        Result for: rz1-N1_superstorage
         Product: 4666-AH8
         Firmware: 8.6.0.3
 
