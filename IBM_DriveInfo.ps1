@@ -1,16 +1,33 @@
 function IBM_DriveInfo {
     <#
     .SYNOPSIS
-        A short one-line action-based description, e.g. 'Tests if a function is valid'
+       Display Drive information
     .DESCRIPTION
-        A longer description of the function, its purpose, common use cases, etc.
+        Shows the most important information of the hard disks in my opinion and exports them if desired.
     .NOTES
-        Information or caveats about the function e.g. 'This function is not supported in Linux'
+        Version: 1.0.1
+        Tested from IBM Spectrum Virtualize 8.5.x in combination with pwsh 5.1 and 7.4
     .LINK
-        Specify a URI to a help page, this will show when Get-Help -Online is used.
+        IBM Link for lsvdisk: https://www.ibm.com/docs/en/flashsystem-5x00/8.5.x?topic=commands-lsdrive
+        GitHub Link for Script support: https://github.com/DocCLF/ps_collection/blob/main/IBM_DriveInfo.ps1
     .EXAMPLE
-        Test-MyTestFunction -Verbose
-        Explanation of the function or its result. You can include multiple examples with additional .EXAMPLE lines
+        IBM_DriveInfo -TD_UserName MoUser -TD_DeviceIP 123.234.345.456 -TD_export no
+        Result for: rz1-N1_FLS95mimix
+        Product: 4666-AH8
+        Firmware: 8.6.0.3
+
+        DriveID          : 35
+        DriveCap         : 26.2TB
+        PhyDriveCap      : 8.73TB
+        PhyUsedDriveCap  : 1.18TB
+        EffeUsedDriveCap : 4.50TB
+        DriveStatus      : online
+        ProductID        : 101406B1
+        FWlev            : 3_1_11
+        Slot             : 22
+    .EXAMPLE
+        IBM_DriveInfo -TD_UserName MoUser -TD_DeviceIP 123.234.345.456 -TD_export yes   
+        .\NodeName_Drive_Overview_Date.csv 
     #>
     [CmdletBinding()]
     param (
@@ -25,26 +42,36 @@ function IBM_DriveInfo {
     begin {
         Clear-Variable TD* -Scope Global
         <# suppresses error messages #>
-        #$ErrorActionPreference="SilentlyContinue"
+        $ErrorActionPreference="SilentlyContinue"
         $TD_DriveOverview = @()
         [string]$TD_SlotOld = "0"
+        [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
-        #$TD_CollectInfos = ssh $UserName@$DeviceIP 'lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-        $TD_CollectInfos = Get-Content -Path ".\lsdrive.txt"
-        #Start-Sleep -Seconds 1.5
+        $TD_CollectInfos = ssh $UserName@$DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
+        0..$TD_CollectInfos.count |ForEach-Object {
+            <# Split the infos in 2 var #>
+            if($TD_CollectInfos[$_] -match '^serial_number'){
+                $TD_NodeInfoTemp = $TD_CollectInfos |Select-Object -First $_
+                $TD_CollectInfosTemp = $TD_CollectInfos |Select-Object -Skip $_
+            }
+        }
+        Start-Sleep -Seconds 1
     }
     
     process {
-        <#  #>
+        <# Node Info#>
+        $TD_NodeSplitInfo = "" | Select-Object NodeName,ProdName,NodeFW
+        foreach($TD_NodeInfoLine in $TD_NodeInfoTemp){
+            $TD_NodeSplitInfo.NodeName = ($TD_NodeInfoLine|Select-String -Pattern '^failover_name\s+([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+            $TD_NodeSplitInfo.ProdName = ($TD_NodeInfoLine|Select-String -Pattern '^product_mtm\s+([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+            $TD_NodeSplitInfo.NodeFW = ($TD_NodeInfoLine|Select-String -Pattern '^code_level\s+([a-zA-Z0-9-_.]+)' -AllMatches).Matches.Groups[1].Value
+            Write-Debug -Message $TD_NodeSplitInfo
+        }
+        
+        <# Drive Info #>
         $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveCap,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,DriveStatus,DriveCap,ProductID,FWlev,Slot
-        foreach($TD_CollectInfo in $TD_CollectInfos){
-
-            <# Node Info#>
-            #[int]$TD_NodeID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-            #[string]$TD_NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
-            #[Int64]$TD_NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
-            <# Drive Info #>
-
+        foreach($TD_CollectInfo in $TD_CollectInfosTemp){
             [int]$TD_DriveSplitInfos.DriveID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.DriveCap = ($TD_CollectInfo|Select-String -Pattern '^capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.PhyDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
@@ -63,10 +90,27 @@ function IBM_DriveInfo {
                 $TD_DriveOverview += $TD_DriveSplitInfos
                 $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveCap,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,DriveStatus,DriveCap,ProductID,FWlev,Slot
             }
+
+            <# Progressbar  #>
+            $ProgCounter++
+            $Completed = ($ProgCounter/$TD_CollectInfosTemp.Count) * 100
+            Write-Progress -Activity "Create the list" -Status "Progress:" -PercentComplete $Completed
         }
     }
-    
-    end {
-        return $TD_DriveOverview
+    end{
+        <# export y or n #>
+        if($Export -eq "yes"){
+            <# exported to .\Drive_Overview_(Date).csv #>
+            $TD_DriveOverview | Export-Csv -Path .\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+        }else {
+            <# output on the promt #>
+            Write-Host "Result for: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
+            Start-Sleep -Seconds 2.5
+            return $TD_DriveOverview
+        }
+        <# wait a moment #>
+        Start-Sleep -Seconds 1
+        <# Cleanup all TD* Vars #>
+        Clear-Variable TD* -Scope Global
     }
 }
