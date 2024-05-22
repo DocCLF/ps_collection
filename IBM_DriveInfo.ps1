@@ -109,7 +109,7 @@ function IBM_DriveInfo {
             $TD_DriveOverview | Export-Csv -Path .\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }else {
             <# output on the promt #>
-            Write-Host "Result for: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
+            Write-Host "Result for:`nName: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
             Start-Sleep -Seconds 2.5
             return $TD_DriveOverview
         }
