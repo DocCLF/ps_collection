@@ -5,6 +5,8 @@ function IBM_Enclosure_FCPortStats {
     .DESCRIPTION
         To view the port transfer and failure counts and Small Form-factor Pluggable (SFP) diagnostics data that is recorded in the statistics file for a node.
     .NOTES
+        Supported with IBM Storage Virtualize 8.4.x and higher
+    .NOTES
         Version:
         1.0.1 Initail Release
     .LINK
@@ -37,14 +39,15 @@ function IBM_Enclosure_FCPortStats {
         $ErrorActionPreference="SilentlyContinue"
         $TD_PortStats_Overview = @()
         $NodeList =@()
+        [int]$ProgCounter=0
+        [int]$i=0
         $test =@('enclosure_serial_number','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
         <# Connect to Device and get all needed Data #>
         #$TD_CollectInfos = Get-Content -Path ".\lsportstats.txt"
-        [int]$i=0
         if($TD_Storage -eq "FSystem"){
-            $TD_CollectInfos = ssh $UserName@$DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
         }else {
-            $TD_CollectInfos = ssh $UserName@$DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
         }
         Start-Sleep -Seconds 1
     }
@@ -107,16 +110,20 @@ function IBM_Enclosure_FCPortStats {
                 $NodeWWNN = ""
                 $TD_PortStatsSplitInfos = "" | Select-Object CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
             }
+            <# Progressbar  #>
+            $ProgCounter++
+            $Completed = ($ProgCounter/$NodeList.Count) * 100
+            Write-Progress -Activity "Create the list" -Status "Progress:" -PercentComplete $Completed
         }
     }
     end {
         <# export y or n #>
         if($TD_export -eq "yes"){
             <# exported to .\Drive_Overview_(Date).csv #>
-            $TD_PortStats_Overview | Export-Csv -Path .\$($TD_PortStatsSplitInfos.NodeName)_StatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            $TD_PortStats_Overview | Export-Csv -Path .\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }else {
             <# output on the promt #>
-            Write-Host "Result for:`nName: $($TD_PortStatsSplitInfos.NodeName) `nProduct: $($TD_PortStatsSplitInfos.NodeSN) `n" -ForegroundColor Yellow
+            Write-Host "Result:`n" -ForegroundColor Yellow
             Start-Sleep -Seconds 2.5
             return $TD_PortStats_Overview
         }
