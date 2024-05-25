@@ -61,7 +61,7 @@ function IBM_Enclosure_FCPortStats {
                 [string]$NodeSN = ($TD_CollectInfo|Select-String -Pattern '^enclosure_serial_number\s([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
                 [string]$NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
                 [string]$NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
-                [string]$TD_NodeStatsID = ($TD_CollectInfo|Select-String -Pattern '^Nn_stats_[A-Za-z0-9]+-(\d+)' -AllMatches).Matches.Groups[1].Value
+                [string]$TD_NodeStatsID = ($TD_CollectInfo|Select-String -Pattern '^Nn_stats_([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
                 if($NodeWWNN -ne ""){
                     Write-Debug -Message $NodeWWNN -ForegroundColor Green
                     $Node =[PSCustomObject]@{
