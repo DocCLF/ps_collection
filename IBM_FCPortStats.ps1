@@ -1,7 +1,7 @@
 function IBM_Enclosure_FCPortStats {
     <#
     .SYNOPSIS
-        Display the PortStats of IBM Storage
+        Display the PortStats of IBM SVC & Storage
     .DESCRIPTION
         To view the port transfer and failure counts and Small Form-factor Pluggable (SFP) diagnostics data that is recorded in the statistics file for a node.
     .NOTES
@@ -13,6 +13,7 @@ function IBM_Enclosure_FCPortStats {
         IBM Doku to lsportstats
         https://www.ibm.com/docs/en/flashsystem-5x00/8.5.x?topic=commands-lsportstats
     .EXAMPLE
+        Note you need a Admin-Account
         IBM_Enclosure_FCPortStats -TD_UserName AdminUser -TD_DeviceIP 1.1.1.1
 
         IBM_Enclosure_FCPortStats -TD_UserName AdminUser -TD_DeviceIP 1.1.1.1 -TD_export yes
