@@ -41,9 +41,8 @@ function IBM_Enclosure_FCPortStats {
         $NodeList =@()
         [int]$ProgCounter=0
         [int]$i=0
-        $test =@('enclosure_serial_number','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
+        $test =@('enclosure_serial_number','panel_name','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
         <# Connect to Device and get all needed Data #>
-        #$TD_CollectInfos = Get-Content -Path ".\lsportstats.txt"
         if($TD_Storage -eq "FSystem"){
             $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
         }else {
@@ -57,27 +56,28 @@ function IBM_Enclosure_FCPortStats {
         foreach($TD_CollectInfo in $TD_CollectInfos){
             if(Select-String -InputObject $TD_CollectInfo -Pattern $test){ 
                 <# Node Info#>
-                [int]$NodeID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-                [string]$NodeSN = ($TD_CollectInfo|Select-String -Pattern '^enclosure_serial_number\s([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
-                [string]$NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
-                [string]$NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
+                [int]$TD_NodeID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
+                #[string]$TD_NodeSN = ($TD_CollectInfo|Select-String -Pattern '^enclosure_serial_number\s([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
+                [string]$TD_NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+                [string]$TD_NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
+                #[string]$TD_NodeSN = ($TD_CollectInfo|Select-String -Pattern '^panel_name\s([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
                 [string]$TD_NodeStatsID = ($TD_CollectInfo|Select-String -Pattern '^Nn_stats_([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
-                if($NodeWWNN -ne ""){
-                    Write-Debug -Message $NodeWWNN -ForegroundColor Green
-                    $Node =[PSCustomObject]@{
-                        NodeID = $NodeID
-                        NodeSN = $NodeSN
-                        NodeName = $NodeName
-                        NodeWWNN = $NodeWWNN
+                if($TD_NodeWWNN -ne ""){
+                    Write-Debug -Message $TD_NodeSN
+                    $TD_Node =[PSCustomObject]@{
+                        NodeID = $TD_NodeID
+                        #NodeSN = $TD_NodeSN
+                        NodeName = $TD_NodeName
+                        NodeWWNN = $TD_NodeWWNN
                     }
-                    $NodeList += $Node
-                    $NodeWWNN = ""
+                    $NodeList += $TD_Node
+                    $TD_NodeWWNN = ""
                 }
                 if($NodeList.Count -ge 1 -and $TD_NodeStatsID -ne ""){
                     $TD_NodeStatsID = ""
                     $TD_PortStatsSplitInfos = "" | Select-Object NodeID,NodeSN,NodeName,NodeWWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
                     [int]$TD_PortStatsSplitInfos.NodeID = $NodeList.NodeID[$i]
-                    [string]$TD_PortStatsSplitInfos.NodeSN = $NodeList.NodeSN[$i]
+                    #[string]$TD_PortStatsSplitInfos.NodeSN = $NodeList.NodeSN[$i]
                     [string]$TD_PortStatsSplitInfos.NodeName = $NodeList.NodeName[$i]
                     [string]$TD_PortStatsSplitInfos.NodeWWNN = $NodeList.NodeWWNN[$i]
                     Write-Debug -Message $NodeList.NodeName[$i]
@@ -107,7 +107,7 @@ function IBM_Enclosure_FCPortStats {
             if(([String]::IsNullOrEmpty($TD_CollectInfo)) -or $TD_CollectInfo -eq "/>"){
                 if($TD_PortStatsSplitInfos.CardType -ne "FC"){continue}
                 $TD_PortStats_Overview += $TD_PortStatsSplitInfos
-                $NodeWWNN = ""
+                $TD_NodeWWNN = ""
                 $TD_PortStatsSplitInfos = "" | Select-Object CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
             }
             <# Progressbar  #>
