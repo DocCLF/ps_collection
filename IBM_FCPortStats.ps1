@@ -13,7 +13,7 @@ function IBM_FCPortStats {
         IBM Doku to lsportstats
         https://www.ibm.com/docs/en/flashsystem-5x00/8.5.x?topic=commands-lsportstats
     .EXAMPLE
-        Note you need a Admin-Account
+        Note: You need an admin account and you should use the cluster IP to get all data of all devices.
         IBM_Enclosure_FCPortStats -TD_UserName AdminUser -TD_DeviceIP 1.1.1.1
 
         IBM_Enclosure_FCPortStats -TD_UserName AdminUser -TD_DeviceIP 1.1.1.1 -TD_export yes
