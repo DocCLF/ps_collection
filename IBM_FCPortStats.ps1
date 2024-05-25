@@ -1,4 +1,4 @@
-function IBM_Enclosure_FCPortStats {
+function IBM_FCPortStats {
     <#
     .SYNOPSIS
         Display the PortStats of IBM SVC & Storage
