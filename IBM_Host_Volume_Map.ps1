@@ -2,7 +2,10 @@ function IBM_Host_Volume_Map {
     <#
     .SYNOPSIS
         Displays a list of host/cluster and there volume relationships
-    .DESCRIPTION
+    .NOTES
+        v1.0.2
+        * fix: TD_* Wildcard at Username, DeviceIP and Export
+
         v1.0.1
         This function displays a list of volume IDs, names and more. 
         These volumes are the volumes that are mapped to the specified host or hostcluster.  
@@ -26,15 +29,15 @@ function IBM_Host_Volume_Map {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$UserName,
+        [string]$TD_UserName,
         [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$DeviceIP,
+        [string]$TD_DeviceIP,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("Host","Hostcluster")]
         [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$Export = "no"
+        [string]$TD_Export = "no"
     )
     begin{
         <# suppresses error messages #>
@@ -43,9 +46,8 @@ function IBM_Host_Volume_Map {
         $TD_Mappingresault = @()
         <# int for the progressbar #>
         [int]$nbr=0
-
         <# Connection to the system via ssh and filtering and provision of data #>
-        $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+        $TD_CollectVolInfo = ssh $TD_UserName@$TD_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
         $i = $TD_CollectVolInfo.Count
 
@@ -112,7 +114,7 @@ function IBM_Host_Volume_Map {
     }
     end{
         <# export y or n #>
-        if($Export -eq "yes"){
+        if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
             $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }else {
