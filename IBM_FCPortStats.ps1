@@ -51,7 +51,6 @@ function IBM_FCPortStats {
         }
         Start-Sleep -Seconds 1
     }
-    
     process {
         <#  #>
         foreach($TD_CollectInfo in $TD_CollectInfos){
