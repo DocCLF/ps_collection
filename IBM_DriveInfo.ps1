@@ -73,7 +73,7 @@ function IBM_DriveInfo {
             $TD_NodeSplitInfo.NodeFW = ($TD_NodeInfoLine|Select-String -Pattern '^code_level\s+([a-zA-Z0-9-_.]+)' -AllMatches).Matches.Groups[1].Value
             Write-Debug -Message $TD_NodeSplitInfo
         }
-        
+
         <# Drive Info #>
         $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveCap,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,DriveStatus,DriveCap,ProductID,FWlev,Slot
         foreach($TD_CollectInfo in $TD_CollectInfosTemp){
