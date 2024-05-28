@@ -16,6 +16,9 @@ function IBM_Expand_HyperswapVolume {
         - There are no mirrored copies.
         - The volume is not in a consistency group. To expand the volume, you must remove the active-active relationship for the volume from the remote copy consistency group. 
           The active-active relationship can be added back to the consistency group after the volume is expanded.
+    .NOTES
+        v1.0.1
+        This function only supports IBM FlashStorage systems starting with version 8.3.x         
     .LINK
         https://www.ibm.com/docs/en/flashsystem-5x00/8.3.x?topic=commands-expandvolume
     .EXAMPLE
@@ -79,7 +82,7 @@ function IBM_Expand_HyperswapVolume {
         $TD_Temp = $TD_Vol_Info
     }
     Write-Host "`n#Use the expandvolume command ONLY to expand the size of a HyperSwap® volume by a specified capacity.`n" -ForegroundColor Yellow
-    Write-Host "`n#And last but not least, if you are not sure then please: 'RTFM'! ;) " -ForegroundColor Red
+    Write-Host "`n#And last but not least, if you are not sure then please: 'Read the manual'! ;) " -ForegroundColor Red
     <# Tidying up for the conscience #>
     Clear-Variable TD* -Scope Global;
 }
