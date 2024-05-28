@@ -81,7 +81,7 @@ function IBM_Expand_VdiskSize {
         $TD_Temp = $TD_Vol_Info
     }
     Write-Host "`n`nRemember:`n1. You cannot resize (expand) an image mode volume.`n2. You cannot resize (expand) a volume if cloud snapshot is enabled on that volume.`n3. You cannot specify expandvdisksize -rsize to expand (resize) a thin or compressed volume copy that is in a data reduction pool.`n4. You cannot specify expandvdisksize -mdisk to resize (expand) a volume when a volume is being migrated." -ForegroundColor Yellow
-    Write-Host "`nAnd last but not least, if you are not sure then please: 'RTFM'! ;) " -ForegroundColor Red
+    Write-Host "`nAnd last but not least, if you are not sure then please: 'Read the manual'! ;) " -ForegroundColor Red
     
     <# Tidying up for the conscience #>
     Clear-Variable TD* -Scope Global;
