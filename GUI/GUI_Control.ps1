@@ -10,7 +10,8 @@ $Mainform=[Windows.Markup.XamlReader]::Load($Mainreader)
 $MainXAML.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $Mainform.FindName($_.Name)}
 
 # Get functions files
-$Functions = @(Get-ChildItem -Path $PSScriptRoot\*.ps1 -ErrorAction SilentlyContinue)
+$PSRootPath = Split-Path -Path $PSScriptRoot -Parent
+$Functions = @(Get-ChildItem -Path $PSRootPath\*.ps1 -ErrorAction SilentlyContinue)
 
 # Dot source the files
 foreach($import in @($Functions)) {
@@ -94,3 +95,4 @@ Get-Variable TD_*
 
 
 $Mainform.showDialog()
+$Mainform.activate()
