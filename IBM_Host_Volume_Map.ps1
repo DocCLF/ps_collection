@@ -117,6 +117,9 @@ function IBM_Host_Volume_Map {
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
             $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            $TD_FileInfo=Get-ChildItem Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
+            $TD_FileLocation=$TD_FileInfo.DirectoryName
+            Write-Host "The Export can be found at $TD_FileLocation " -ForegroundColor Green
         }else {
             <# output on the promt #>
             return $TD_Mappingresault

@@ -121,6 +121,9 @@ function IBM_FCPortStats {
         if($TD_export -eq "yes"){
             <# exported to .\Drive_Overview_(Date).csv #>
             $TD_PortStats_Overview | Export-Csv -Path .\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            $TD_FileInfo=Get-ChildItem FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
+            $TD_FileLocation=$TD_FileInfo.DirectoryName
+            Write-Host "The Export can be found at $TD_FileLocation " -ForegroundColor Green
         }else {
             <# output on the promt #>
             Write-Host "Result:`n" -ForegroundColor Yellow
