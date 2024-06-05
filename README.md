@@ -31,10 +31,12 @@ Attention, the Expand_Volume and Vdisk files are currently not supported, you ca
 Example:
 ```powershell
 PowerShell 7.4.2
-PS C:\Users\mailt> D:\ps_collection-main\ps_collection-main\IBM_Expand_HyperswapVolume.ps1
+PS C:\Users\mailt> cd D:\ps_collection-main\ps_collection-main\
+PS D:\ps_collection-main\ps_collection-main> .\IBM_Expand_HyperswapVolume.ps1
 ```
 or for non-HyperSwap
 ```powershell
 PowerShell 7.4.2
-PS C:\Users\mailt> D:\ps_collection-main\ps_collection-main\IBM_Expand_VdiskSize.ps1
+PS C:\Users\mailt> cd D:\ps_collection-main\ps_collection-main\
+PS D:\ps_collection-main\ps_collection-main> .\IBM_Expand_VdiskSize.ps1
 ```
