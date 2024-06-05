@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="900" Width="1600">
+        Title="PSWH Collection" Height="150" Width="900" Left="650" Top="10">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -24,17 +23,7 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <!--Visibile if one Athlet is markt as currentathlet-->
-            <Button
-                x:Name="btn_Dashboard"
-                Grid.Column="1"
-                Height="30"
-                Width="100"
-                Margin="10"
-                Padding="5"
-                Content="Dashboard" />
-
-            <!--Visibile if one Athlet is markt as currentathlet-->
+            <!--IBM_HostVolumeMap-->
             <Button
                 x:Name="btn_IBM_HostVolumeMap"
                 Grid.Column="1"
@@ -44,7 +33,7 @@
                 Padding="5"
                 Content="Host Volume Info" />
 
-            <!--Collection of all useable Workouts-->
+            <!--IBM_DriveInfo-->
             <Button
                 x:Name="btn_IBM_DriveInfo"
                 Grid.Column="2"
@@ -54,7 +43,7 @@
                 Padding="5"
                 Content="Drive Info" />
 
-            <!--Collection of all useable Events-->
+            <!--IBM_FCPortStats-->
             <Button
                 x:Name="btn_IBM_FCPortStats"
                 Grid.Column="3"
@@ -64,7 +53,7 @@
                 Padding="5"
                 Content="FC-Port Info" />
 
-            <!--If needed Admin/Trainer Logout-->
+            <!--CloseAll GUI-->
             <Button
                 x:Name="btn_CloseAll"
                 Grid.Column="7"
@@ -75,6 +64,6 @@
                 Background="LightCoral"
                 Content="Exit" />
         </Grid>
-        <Grid Grid.Row="1" x:Name="User_Contr_Area" /> 
+        <!-- <Grid Grid.Row="1" x:Name="User_Contr_Area" /> -->
     </Grid>
 </Window>
