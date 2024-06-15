@@ -24,16 +24,19 @@ function IBM_FCPortStats {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$TD_UserName,
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [ipaddress]$TD_DeviceIP,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_ConnectionTyp,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_UserName,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("FSystem","SVC")]
         [string]$TD_Storage = "FSystem",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$TD_export = "no"
+        [string]$TD_export = "yes"
     )
     begin {
         <# suppresses error messages #>
@@ -45,9 +48,17 @@ function IBM_FCPortStats {
         $test =@('enclosure_serial_number','panel_name','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
-            $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            if($TD_Device_ConnectionTyp -eq "ssh"){
+                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            }else{
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            }
         }else {
-            $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            if($TD_Device_ConnectionTyp -eq "ssh"){
+                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            }else{
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+            }
         }
         Start-Sleep -Seconds 1
     }
