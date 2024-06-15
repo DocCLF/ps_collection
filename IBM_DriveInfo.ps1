@@ -36,13 +36,19 @@ function IBM_DriveInfo {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$TD_UserName,
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [ipaddress]$TD_DeviceIP,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_ConnectionTyp,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_UserName,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_PW,
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("Host","Hostcluster")]
+        [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$TD_export = "no"
+        [string]$TD_Export = "yes"
     )
     begin {
         Clear-Variable TD* -Scope Global
@@ -52,7 +58,12 @@ function IBM_DriveInfo {
         [string]$TD_SlotOld = "0"
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
-        $TD_CollectInfos = ssh $TD_UserName@$TD_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        if($TD_Device_ConnectionTyp -eq "ssh"){
+            $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        }else {
+            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        }
+        
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
         0..$TD_CollectInfos.count |ForEach-Object {
             <# Split the infos in 2 var #>
