@@ -28,16 +28,19 @@ function IBM_Host_Volume_Map {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$TD_UserName,
-        [Parameter(Mandatory,ValueFromPipeline)]
-        [string]$TD_DeviceIP,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_ConnectionTyp,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_UserName,
+        [Parameter(Mandatory)]
+        [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("Host","Hostcluster")]
         [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$TD_Export = "no"
+        [string]$TD_Export = "yes"
     )
     begin{
         <# suppresses error messages #>
@@ -47,7 +50,11 @@ function IBM_Host_Volume_Map {
         <# int for the progressbar #>
         [int]$nbr=0
         <# Connection to the system via ssh and filtering and provision of data #>
-        $TD_CollectVolInfo = ssh $TD_UserName@$TD_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+        if($TD_Device_ConnectionTyp -eq "ssh"){
+            $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+        }else {
+            $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
+        }
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
         $i = $TD_CollectVolInfo.Count
 
