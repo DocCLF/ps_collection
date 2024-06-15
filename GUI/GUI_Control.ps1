@@ -14,6 +14,7 @@ $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
 $Functions = @(Get-ChildItem -Path $PSRootPath\*.ps1 -ErrorAction SilentlyContinue)
 
 # Dot source the files
+
 foreach($import in @($Functions)) {
     try {
        . $import.fullname
@@ -68,20 +69,194 @@ foreach($file in $UserCxamlFile){
     }
 }
 #>
+
+function Get_CredGUIInfos {
+    [CmdletBinding()]
+    param(
+        #[Parameter(Mandatory)]
+        [Int16]$STP_ID,
+        #[Parameter(Mandatory)]
+        [string]$TD_ConnectionTyp,
+        #[Parameter(Mandatory)]
+        [string]$TD_IPAdresse,
+        #[Parameter(Mandatory)]
+        [string]$TD_UserName,
+        #[Parameter(Mandatory)]
+        $TD_Password
+    )
+    #Write-Host $STP_ID $TD_ConnectionTyp $TD_IPAdresse $TD_UserName $TD_Password.Password -ForegroundColor Red
+    $TD_IPPattern = '^(?:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})$'
+    $TD_IPCheck = $TD_IPAdresse -match $TD_IPPattern
+
+    if(($TD_cb_SamePW.IsChecked)-and($TD_ConnectionTyp -eq "plink")){
+        $TD_Password=$TD_tb_Password
+    }elseif (($TD_ConnectionTyp -eq "ssh")) {
+        $TD_Password=""
+    }
+    if($TD_cb_SameUserName.IsChecked){
+        $TD_UserName=$TD_tb_UserName.Text
+    }
+
+    if($TD_IPCheck){
+        $TD_CredCollection=[ordered]@{
+            'ID'= $STP_ID;
+            'ConnectionTyp'= $TD_ConnectionTyp;
+            'IPAddress'= $TD_IPAdresse;
+            'UserName'= $TD_UserName;
+            'Password'= $TD_Password.Password
+        }
+        $TD_CredObject=New-Object -TypeName psobject -Property $TD_CredCollection
+    }else {
+        <# Action when all if and elseif conditions are false #>
+        Write-Host "IP is not validate" -ForegroundColor Red
+        $TD_IPAdresse = $null
+    }
+    return $TD_CredObject
+}
+
+$TD_tbt_addrmLine.add_click({
+    <#log the txtbox (optional for later use)#>
+    #$TD_tb_IPAdr.IsEnabled=$false
+    if($TD_tbt_addrmLine.Content -eq "ADD"){
+        $TD_tbt_addrmLine.Content="REMOVE"
+        $TD_stp_Panel2.Visibility="Visible"
+        $TD_tbt_addrmLineOne.Content="ADD"
+        $TD_tbt_addrmLineTwo.Content="ADD"
+    }else {
+        $TD_tbt_addrmLine.Content="ADD"
+        $TD_stp_Panel2.Visibility="Collapsed"
+        $TD_stp_Panel3.Visibility="Collapsed"
+        $TD_stp_Panel4.Visibility="Collapsed"
+    }
+})
+$TD_tbt_addrmLineOne.add_click({
+
+    if($TD_tbt_addrmLineOne.Content -eq "ADD"){
+        $TD_tbt_addrmLineOne.Content="REMOVE"
+        $TD_stp_Panel3.Visibility="Visible"
+        $TD_tbt_addrmLineTwo.Content="ADD"
+    }else {
+        $TD_tbt_addrmLineOne.Content="ADD"
+        $TD_stp_Panel3.Visibility="Collapsed"
+        $TD_stp_Panel4.Visibility="Collapsed"
+    }
+})
+$TD_tbt_addrmLineTwo.add_click({
+
+    if($TD_tbt_addrmLineTwo.Content -eq "ADD"){
+        $TD_tbt_addrmLineTwo.Content="REMOVE"
+        $TD_stp_Panel4.Visibility="Visible"
+    }else {
+        $TD_tbt_addrmLineTwo.Content="ADD"
+        $TD_stp_Panel4.Visibility="Collapsed"
+    }
+})
+
+
+<#$TD_btn_IBM_test.add_click({
+    Get_CredGUIInfos  
+})
+ maybe for later use as filter option
+$TD_tb_UserName.Add_TextChanged({
+    Get_CredGUIInfos
+})
+#>
+
 $TD_btn_IBM_HostVolumeMap.add_click({
-    IBM_Host_Volume_Map
+    
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_ConnectionTyp.Text -TD_IPAdresse $TD_tb_IPAdr.Text -TD_UserName $TD_tb_UserName.Text -TD_Password $TD_tb_Password
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_ConnectionTypOne.Text -TD_IPAdresse $TD_tb_IPAdrOne.Text -TD_UserName $TD_tb_UserNameOne.Text -TD_Password $TD_tb_PasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_ConnectionTypTwo.Text -TD_IPAdresse $TD_tb_IPAdrTwo.Text -TD_UserName $TD_tb_UserNameTwo.Text -TD_Password $TD_tb_PasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_ConnectionTypThree.Text -TD_IPAdresse $TD_tb_IPAdrThree.Text -TD_UserName $TD_tb_UserNameThree.Text -TD_Password $TD_tb_PasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
     #if(!($TD_UserControl1.IsLoaded)){$TD_User_Contr_Area.Children.Add($TD_UserControl1)}
     #$TD_User_Contr_Area.Children.Remove($TD_UserControl2)
     #$TD_User_Contr_Area.Children.Remove($TD_UserControl3)
+
+    foreach($TD_Credential in $TD_Credentials){
+        #Write-Host $TD_Credential -ForegroundColor Red
+        if($TD_Credential -ne ""){
+            IBM_Host_Volume_Map -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password
+            Start-Sleep -Seconds 1.5
+        }
+        #Write-Host $TD_Credential
+    }
+    #Write-Host $TD_Credentials[0] `n $TD_Credentials[1] `n $TD_Credentials[2] `n $TD_Credentials[3] `n
 })
 $TD_btn_IBM_DriveInfo.add_click({
-    IBM_DriveInfo 
+
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_ConnectionTyp.Text -TD_IPAdresse $TD_tb_IPAdr.Text -TD_UserName $TD_tb_UserName.Text -TD_Password $TD_tb_Password
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_ConnectionTypOne.Text -TD_IPAdresse $TD_tb_IPAdrOne.Text -TD_UserName $TD_tb_UserNameOne.Text -TD_Password $TD_tb_PasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_ConnectionTypTwo.Text -TD_IPAdresse $TD_tb_IPAdrTwo.Text -TD_UserName $TD_tb_UserNameTwo.Text -TD_Password $TD_tb_PasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_ConnectionTypThree.Text -TD_IPAdresse $TD_tb_IPAdrThree.Text -TD_UserName $TD_tb_UserNameThree.Text -TD_Password $TD_tb_PasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        #Write-Host $TD_Credential -ForegroundColor Red
+        if($TD_Credential -ne ""){
+            IBM_DriveInfo -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password
+            Start-Sleep -Seconds 1.5
+        }
+        #Write-Host $TD_Credential
+    }
+    #Write-Host $TD_Credentials[0] `n $TD_Credentials[1] `n $TD_Credentials[2] `n $TD_Credentials[3] `n
+    #IBM_DriveInfo 
     #$TD_User_Contr_Area.Children.Add($TD_UserControl2)
     #$TD_User_Contr_Area.Children.Remove($TD_UserControl1)
     #$TD_User_Contr_Area.Children.Remove($TD_UserControl3)
+    
 })
 $TD_btn_IBM_FCPortStats.add_click({
-    IBM_FCPortStats
+
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_ConnectionTyp.Text -TD_IPAdresse $TD_tb_IPAdr.Text -TD_UserName $TD_tb_UserName.Text -TD_Password $TD_tb_Password
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_ConnectionTypOne.Text -TD_IPAdresse $TD_tb_IPAdrOne.Text -TD_UserName $TD_tb_UserNameOne.Text -TD_Password $TD_tb_PasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_ConnectionTypTwo.Text -TD_IPAdresse $TD_tb_IPAdrTwo.Text -TD_UserName $TD_tb_UserNameTwo.Text -TD_Password $TD_tb_PasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_ConnectionTypThree.Text -TD_IPAdresse $TD_tb_IPAdrThree.Text -TD_UserName $TD_tb_UserNameThree.Text -TD_Password $TD_tb_PasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        #Write-Host $TD_Credential -ForegroundColor Red
+        if($TD_Credential -ne ""){
+            IBM_FCPortStats -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password
+            Start-Sleep -Seconds 1.5
+        }
+        #Write-Host $TD_Credential
+    }
+    #IBM_FCPortStats
     #$TD_User_Contr_Area.Children.Remove($TD_UserControl1)
     #$TD_User_Contr_Area.Children.Remove($TD_UserControl2)
     #$TD_User_Contr_Area.Children.Add($TD_UserControl3)
@@ -90,6 +265,7 @@ $TD_btn_IBM_FCPortStats.add_click({
 $TD_btn_CloseAll.add_click({
     $Mainform.Close()
 })
+
 
 Get-Variable TD_*
 
