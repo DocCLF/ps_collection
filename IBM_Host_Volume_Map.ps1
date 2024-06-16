@@ -40,7 +40,8 @@ function IBM_Host_Volume_Map {
         [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$TD_Export = "yes"
+        [string]$TD_Export = "yes",
+        [string]$TD_Exportpath
     )
     begin{
         <# suppresses error messages #>
@@ -123,10 +124,13 @@ function IBM_Host_Volume_Map {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
-            $TD_Mappingresault | Export-Csv -Path .\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-            $TD_FileInfo=Get-ChildItem Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
-            $TD_FileLocation=$TD_FileInfo.DirectoryName
-            Write-Host "The Export can be found at $TD_FileLocation " -ForegroundColor Green
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $TD_Mappingresault
