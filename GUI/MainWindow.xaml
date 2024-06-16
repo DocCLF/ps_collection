@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="PSWH Collection" Height="500" Width="1000" WindowStartupLocation="CenterOwner">
-     <Window.Resources>
+    <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
@@ -69,7 +69,7 @@
                         <ComboBoxItem>plink</ComboBoxItem>
                     </ComboBox>
                     <Label  Content="IP-Adresse :" />
-                    <TextBox x:Name="tb_IPAdr" MinWidth="100" MaxLength="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" IsEnabled="true"/>
+                    <TextBox x:Name="tb_IPAdr" MinWidth="100" MaxLength="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
                     <Label  Content="UserName :" />
                     <TextBox x:Name="tb_UserName" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
                     <Label Content="Password :" />
@@ -84,9 +84,9 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="tbt_addrmLine" Content="ADD" Margin="50,0,0,0"/>
+                    <ToggleButton x:Name="tbn_addrmLine" Content="ADD" Margin="25,0,0,0"/>
                 </StackPanel>
-                <StackPanel Grid.Row="1" x:Name="stp_Panel2" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbt_addrmLine, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                <StackPanel Grid.Row="1" x:Name="stp_Panel2" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_addrmLine, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
                     <ComboBox  Name="cb_ConnectionTypOne" Width="75" SelectedIndex="0" SelectedValuePath="Content" >
                         <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
                         <ComboBoxItem>plink</ComboBoxItem>
@@ -120,9 +120,9 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="tbt_addrmLineOne" Content="ADD" Margin="50,0,0,0"/>
+                    <ToggleButton x:Name="tbn_addrmLineOne" Content="ADD" Margin="25,0,0,0"/>
                 </StackPanel>
-                <StackPanel Grid.Row="2" x:Name="stp_Panel3" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbt_addrmLineOne, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                <StackPanel Grid.Row="2" x:Name="stp_Panel3" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_addrmLineOne, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
                     <ComboBox  Name="cb_ConnectionTypTwo" Width="75" SelectedIndex="0" SelectedValuePath="Content" >
                         <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
                         <ComboBoxItem>plink</ComboBoxItem>
@@ -156,9 +156,9 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="tbt_addrmLineTwo" Content="ADD" Margin="50,0,0,0"/>
+                    <ToggleButton x:Name="tbn_addrmLineTwo" Content="ADD" Margin="25,0,0,0"/>
                 </StackPanel>
-                <StackPanel Grid.Row="3" x:Name="stp_Panel4" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbt_addrmLineTwo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                <StackPanel Grid.Row="3" x:Name="stp_Panel4" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_addrmLineTwo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
                     <ComboBox  Name="cb_ConnectionTypThree" Width="75" SelectedIndex="0" SelectedValuePath="Content" >
                         <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
                         <ComboBoxItem>plink</ComboBoxItem>
@@ -192,6 +192,8 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
+                    
+                    <ToggleButton Margin="25,0,0,0" Visibility="Hidden"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Margin="0,10,2,0" Orientation="Vertical" >
                     <Grid>
@@ -204,6 +206,8 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
+                        <Button Grid.Column="0" Grid.Row="0" x:Name="btn_ConnectTest" Content="Test Connection" HorizontalAlignment="Left" Padding="3" Margin="2"/>
+                        <TextBox Grid.Column="0" Grid.Row="1" x:Name="tb_Exportpath" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" Padding="3" Margin="2"/>
                         <Label Grid.Column="1" Grid.Row="0" Content="Same UserName @ all Maschines :" VerticalAlignment="Center"/>
                         <CheckBox Grid.Column="2" Grid.Row="0" x:Name="cb_SameUserName" VerticalAlignment="Center" />
                         <Label Grid.Column="1" Grid.Row="1" Content="Same Password @ all Maschines :" HorizontalAlignment="Right" VerticalAlignment="Center"/>
