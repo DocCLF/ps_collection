@@ -36,7 +36,8 @@ function IBM_FCPortStats {
         [string]$TD_Storage = "FSystem",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$TD_export = "yes"
+        [string]$TD_export = "yes",
+        [string]$TD_Exportpath
     )
     begin {
         <# suppresses error messages #>
@@ -130,11 +131,14 @@ function IBM_FCPortStats {
     end {
         <# export y or n #>
         if($TD_export -eq "yes"){
-            <# exported to .\Drive_Overview_(Date).csv #>
-            $TD_PortStats_Overview | Export-Csv -Path .\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-            $TD_FileInfo=Get-ChildItem FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
-            $TD_FileLocation=$TD_FileInfo.DirectoryName
-            Write-Host "The Export can be found at $TD_FileLocation " -ForegroundColor Green
+            <# exported to .\Host_Volume_Map_Result.csv #>
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            #Invoke-Item "$TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             Write-Host "Result:`n" -ForegroundColor Yellow
