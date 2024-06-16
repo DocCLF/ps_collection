@@ -48,7 +48,8 @@ function IBM_DriveInfo {
         [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
-        [string]$TD_Export = "yes"
+        [string]$TD_Export = "yes",
+        [string]$TD_Exportpath
     )
     begin {
         Clear-Variable TD* -Scope Global
@@ -117,12 +118,15 @@ function IBM_DriveInfo {
         <# export y or n #>
         if($TD_export -eq "yes"){
             <# exported to .\Drive_Overview_(Date).csv #>
-            $TD_DriveOverview | Export-Csv -Path .\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-            $TD_FileInfo=Get-ChildItem $($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
-            $TD_FileLocation=$TD_FileInfo.DirectoryName
-            Write-Host "The Export can be found at $TD_FileLocation " -ForegroundColor Green
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $TD_DriveOverview | Export-Csv -Path $TD_Exportpath\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+            #$TD_FileInfo=Get-ChildItem Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
+            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             Start-Sleep -Seconds 1
-            Invoke-Item ".\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv"
+            #Invoke-Item "$TD_Exportpath\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             Write-Host "Result for:`nName: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
