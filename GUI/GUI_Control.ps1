@@ -243,8 +243,10 @@ $TD_btn_IBM_HostVolumeMap.add_click({
         if(($TD_Credential.ConnectionTyp -eq "ssh") -or ($TD_Credential.ConnectionTyp -eq "plink")){
             Write-Host $TD_Credential.ConnectionTyp -ForegroundColor Red
             Write-Host "1" -ForegroundColor Green
-            IBM_Host_Volume_Map -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Exportpath $TD_Credential.ExportPath
+            $OutCome = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Exportpath $TD_Credential.ExportPath
             Start-Sleep -Seconds 1.5
+            Write-Host $OutCome
+            #$TD_Func_Results.Text="$OutCome"
         }
         #Write-Host $TD_Credential
     }
@@ -270,9 +272,9 @@ $TD_btn_IBM_DriveInfo.add_click({
     Start-Sleep -Seconds 0.5
 
     foreach($TD_Credential in $TD_Credentials){
-        #Write-Host $TD_Credential -ForegroundColor Red
+        Write-Host $TD_Credential -ForegroundColor Red
         if($TD_Credential -ne ""){
-            IBM_DriveInfo -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Exportpath $TD_Credential.ExportPath
+            IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Exportpath $TD_Credential.ExportPath
             Start-Sleep -Seconds 1.5
         }
         #Write-Host $TD_Credential
@@ -305,9 +307,9 @@ $TD_btn_IBM_FCPortStats.add_click({
     Start-Sleep -Seconds 0.5
 
     foreach($TD_Credential in $TD_Credentials){
-        #Write-Host $TD_Credential -ForegroundColor Red
+        Write-Host $TD_Credential -ForegroundColor Red
         if($TD_Credential -ne ""){
-            IBM_FCPortStats -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Exportpath $TD_Credential.ExportPath
+            IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Exportpath $TD_Credential.ExportPath
             Start-Sleep -Seconds 1.5
         }
         #Write-Host $TD_Credential
