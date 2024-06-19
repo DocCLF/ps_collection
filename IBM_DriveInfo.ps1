@@ -37,6 +37,8 @@ function IBM_DriveInfo {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
+        [Int16]$TD_Line_ID = 0,
+        [Parameter(Mandatory)]
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
@@ -119,9 +121,11 @@ function IBM_DriveInfo {
         if($TD_export -eq "yes"){
             <# exported to .\Drive_Overview_(Date).csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_DriveOverview | Export-Csv -Path $TD_Exportpath\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                Write-Host $TD_DriveOverview -ForegroundColor Green
+                $TD_DriveOverview | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                Write-Host $TD_DriveOverview -ForegroundColor Yellow
+                $TD_DriveOverview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
             #$TD_FileInfo=Get-ChildItem Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
             Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
