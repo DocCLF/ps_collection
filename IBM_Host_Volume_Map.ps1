@@ -29,6 +29,8 @@ function IBM_Host_Volume_Map {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
+        [Int16]$TD_Line_ID = 0,
+        [Parameter(Mandatory)]
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
