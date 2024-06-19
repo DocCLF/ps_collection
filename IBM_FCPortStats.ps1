@@ -25,6 +25,8 @@ function IBM_FCPortStats {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
+        [Int16]$TD_Line_ID = 0,
+        [Parameter(Mandatory)]
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
@@ -133,9 +135,9 @@ function IBM_FCPortStats {
         if($TD_export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_PortStats_Overview | Export-Csv -Path $TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_PortStats_Overview | Export-Csv -Path $PSScriptRoot\Export\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
             Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             #Invoke-Item "$TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv"
