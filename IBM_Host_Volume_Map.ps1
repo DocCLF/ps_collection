@@ -28,22 +28,19 @@ function IBM_Host_Volume_Map {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [Int16]$TD_Line_ID = 0,
-        [Parameter(Mandatory)]
+        [Int16]$TD_Line_ID,
         [string]$TD_Device_ConnectionTyp,
-        [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
-        [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("Host","Hostcluster")]
+        [ValidateSet("Host","Hostcluster","Nofilter")]
         [string]$FilterType = "Nofilter",
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
-        [string]$TD_Exportpath
+        [string]$TD_Exportpath,
+        [string]$TD_RefreshView
     )
     begin{
         <# suppresses error messages #>
@@ -53,11 +50,21 @@ function IBM_Host_Volume_Map {
         <# int for the progressbar #>
         [int]$nbr=0
         <# Connection to the system via ssh and filtering and provision of data #>
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+        if($TD_RefreshView -eq "Update"){
+            $TD_CollectVolInfo = Get-Content -Path $Env:TEMP\$($TD_Line_ID)_Host_Vol_Map_Temp.txt
+            $TD_RefreshView = "Done"
         }else {
-            $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
+            <# Action when all if and elseif conditions are false #>
+            if($TD_Device_ConnectionTyp -eq "ssh"){
+                $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+            }else {
+                Write-Host "plink"
+                $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
+            }
+            #$TD_CollectVolInfo = Get-Content -Path "C:\Users\mailt\Documents\lsvdho.txt"
+            Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_Host_Vol_Map_Temp.txt -InputObject $TD_CollectVolInfo
         }
+        
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
         $i = $TD_CollectVolInfo.Count
 
@@ -127,9 +134,9 @@ function IBM_Host_Volume_Map {
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
             Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
@@ -137,9 +144,10 @@ function IBM_Host_Volume_Map {
             <# output on the promt #>
             return $TD_Mappingresault
         }
+        return $TD_Mappingresault |Select-Object -Skip 1
         <# wait a moment #>
         Start-Sleep -Seconds 1
         <# Cleanup all TD* Vars #>
-        Clear-Variable TD* -Scope Global
+        #Clear-Variable TD* -Scope Global
     }
 }
