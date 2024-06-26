@@ -5,223 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="PSWH Collection" Height="500" Width="1000" WindowStartupLocation="CenterOwner">
+        Title="PSWH Collection" Height="600" Width="1200" WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <ResourceDictionary>
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Background="Bisque">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="2" x:Name="Actions" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
-            <StackPanel>
-                <!--IBM_HostVolumeMap-->
-                <Button
-                x:Name="btn_IBM_HostVolumeMap"
-                Height="30"
-                Width="150"
-                Margin="10"
-                Padding="5"
-                Content="Host Volume Info" />
-                <!--IBM_DriveInfo-->
-                <Button
-                x:Name="btn_IBM_DriveInfo"
-                Height="30"
-                Width="150"
-                Margin="10"
-                Padding="5"
-                Content="Drive Info" />
-                <!--IBM_FCPortStats-->
-                <Button
-                x:Name="btn_IBM_FCPortStats"
-                Height="30"
-                Width="150"
-                Margin="10"
-                Padding="5"
-                Content="FC-Port Info" />
-                <!--CloseAll GUI-->
-                <Button
-                    x:Name="btn_CloseAll"
-                    VerticalAlignment="Bottom"
-                    Height="30"
-                    Width="150"
-                    Margin="10"
-                    Padding="5"
-                    Background="LightCoral"
-                    Content="Exit" />
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Grid.Column="1" Grid.Row="0" x:Name="gb_credentials" Header="Credentials"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" x:Name="stp_Panel1" Orientation="Horizontal" Margin="2" >
-                    <ComboBox  Name="cb_ConnectionTyp" Width="75" SelectedIndex="0" SelectedValuePath="Content">
-                        <ComboBoxItem>ssh</ComboBoxItem>
-                        <ComboBoxItem>plink</ComboBoxItem>
-                    </ComboBox>
-                    <Label  Content="IP-Adresse :" />
-                    <TextBox x:Name="tb_IPAdr" MinWidth="100" MaxLength="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                    <Label  Content="UserName :" />
-                    <TextBox x:Name="tb_UserName" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                    <Label Content="Password :" />
-                    <PasswordBox x:Name="tb_Password" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" >
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_ConnectionTyp, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    <ToggleButton x:Name="tbn_addrmLine" Content="ADD" Margin="25,0,0,0"/>
-                </StackPanel>
-                <StackPanel Grid.Row="1" x:Name="stp_Panel2" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_addrmLine, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
-                    <ComboBox  Name="cb_ConnectionTypOne" Width="75" SelectedIndex="0" SelectedValuePath="Content" >
-                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
-                        <ComboBoxItem>plink</ComboBoxItem>
-                    </ComboBox>
-                    <Label  Content="IP-Adresse :" />
-                    <TextBox x:Name="tb_IPAdrOne" MinWidth="100" MaxLength="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                    <Label  Content="UserName :" />
-                    <TextBox x:Name="tb_UserNameOne" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_SameUserName, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                    <Label Content="Password :" />
-                    <PasswordBox x:Name="tb_PasswordOne" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_ConnectionTypOne, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=cb_SamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    <ToggleButton x:Name="tbn_addrmLineOne" Content="ADD" Margin="25,0,0,0"/>
-                </StackPanel>
-                <StackPanel Grid.Row="2" x:Name="stp_Panel3" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_addrmLineOne, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
-                    <ComboBox  Name="cb_ConnectionTypTwo" Width="75" SelectedIndex="0" SelectedValuePath="Content" >
-                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
-                        <ComboBoxItem>plink</ComboBoxItem>
-                    </ComboBox>
-                    <Label  Content="IP-Adresse :" />
-                    <TextBox x:Name="tb_IPAdrTwo" MinWidth="100" MaxLength="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                    <Label  Content="UserName :" />
-                    <TextBox x:Name="tb_UserNameTwo" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_SameUserName, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                    <Label Content="Password :" />
-                    <PasswordBox x:Name="tb_PasswordTwo" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_ConnectionTypTwo, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=cb_SamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    <ToggleButton x:Name="tbn_addrmLineTwo" Content="ADD" Margin="25,0,0,0"/>
-                </StackPanel>
-                <StackPanel Grid.Row="3" x:Name="stp_Panel4" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_addrmLineTwo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
-                    <ComboBox  Name="cb_ConnectionTypThree" Width="75" SelectedIndex="0" SelectedValuePath="Content" >
-                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
-                        <ComboBoxItem>plink</ComboBoxItem>
-                    </ComboBox>
-                    <Label  Content="IP-Adresse :" />
-                    <TextBox x:Name="tb_IPAdrThree" MinWidth="100" MaxLength="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                    <Label  Content="UserName :" />
-                    <TextBox x:Name="tb_UserNameThree" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_SameUserName, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                    <Label Content="Password :" />
-                    <PasswordBox x:Name="tb_PasswordThree" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=cb_ConnectionTypThree, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding ElementName=cb_SamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    
-                    <ToggleButton Margin="25,0,0,0" Visibility="Hidden"/>
-                </StackPanel>
-                <StackPanel Grid.Row="4" Margin="0,10,2,0" Orientation="Vertical" >
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto" />
-                            <ColumnDefinition Width="auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <Button Grid.Column="0" Grid.Row="0" x:Name="btn_ConnectTest" Content="Test Connection" HorizontalAlignment="Left" Padding="3" Margin="2"/>
-                        <TextBox Grid.Column="0" Grid.Row="1" x:Name="tb_Exportpath" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" Padding="3" Margin="2"/>
-                        <Label Grid.Column="1" Grid.Row="0" Content="Same UserName @ all Maschines :" VerticalAlignment="Center"/>
-                        <CheckBox Grid.Column="2" Grid.Row="0" x:Name="cb_SameUserName" VerticalAlignment="Center" />
-                        <Label Grid.Column="1" Grid.Row="1" Content="Same Password @ all Maschines :" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <CheckBox Grid.Column="2" Grid.Row="1" x:Name="cb_SamePW" VerticalAlignment="Center"/>
-                    </Grid>
-                </StackPanel>
-            </Grid>
-        </GroupBox>
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
-            <TextBlock x:Name="Func_Results" Text="bla" Height="200" Width="200" />
-        </GroupBox> 
+        <StackPanel Orientation="Horizontal" Margin="5" >
+            <!--Storage FS & SVC-->
+            <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{StaticResource MainBtnStyle}"/>
+            <!--Brocade SAN-->
+            <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{StaticResource MainBtnStyle}" />
+            <!--Storage + SAN-->
+            <Button x:Name="btn_Stor_San" Content="Storage + SAN" Style="{StaticResource MainBtnStyle}" />
+            <!--Settings-->
+            <Button x:Name="btn_Settings" Content="Tool Settings" Style="{StaticResource MainBtnStyle}" />
+        </StackPanel>
+        <!--CloseAll GUI-->
+        <Button x:Name="btn_CloseAll" Content="Exit" Style="{StaticResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
+        <Grid Grid.Row="1" x:Name="UserContrArea" />
     </Grid>
 </Window>
