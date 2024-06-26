@@ -71,6 +71,19 @@ foreach($file in $UserCxamlFile){
 <# Set some Vars#>
 $TD_tb_Exportpath.Text = "$PSRootPath\Export\"
 
+#$TD_tb_sanIPAdr             
+#$TD_tb_sanIPAdrOne          
+#$TD_tb_sanIPAdrThree        
+#$TD_tb_sanIPAdrTwo          
+#$TD_tb_sanPassword          
+#$TD_tb_sanPasswordOne       
+#$TD_tb_sanPasswordThree     
+#$TD_tb_sanPasswordTwo       
+#$TD_tb_sanUserName          
+#$TD_tb_sanUserNameOne       
+#$TD_tb_sanUserNameThree     
+#$TD_tb_sanUserNameTwo       
+
 <# start with functions #>
 function Get_CredGUIInfos {
     [CmdletBinding()]
@@ -359,6 +372,10 @@ $TD_btn_ExportCred.add_click({
     Write-Host $TD_SaveCred.FileName -ForegroundColor Green
 })
 $TD_btn_ImportCred.add_click({
+
+    <#there must be a better option for this line#>
+    $TD_tb_storageIPAdr.CLear(); $TD_tb_storageIPAdrOne.CLear(); $TD_tb_storageIPAdrThree.CLear(); $TD_tb_storageIPAdrTwo.CLear();$TD_tb_storagePassword.CLear(); $TD_tb_storagePasswordOne.CLear(); $TD_tb_storagePasswordThree.CLear(); $TD_tb_storagePasswordTwo.CLear(); $TD_tb_storageUserName.CLear(); $TD_tb_storageUserNameOne.CLear(); $TD_tb_storageUserNameThree.CLear(); $TD_tb_storageUserNameTwo.CLear();
+        
     $TD_ImportedCredentials = ImportCred
     $TD_ImportedCredentials | Format-Table
     Write-Host $TD_ImportedCredentials -ForegroundColor Yellow
@@ -368,12 +385,18 @@ $TD_btn_ImportCred.add_click({
                 $TD_cb_storageConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserName.Text= $TD_Cred.UserName; 
             }
             {($_ -eq 2)} { 
+                $TD_tbn_storageaddrmLine.Content="REMOVE"
+                $TD_stp_storagePanel2.Visibility="Visible"
                 $TD_cb_storageConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameOne.Text= $TD_Cred.UserName; 
             }
             {($_ -eq 3)} { 
+                $TD_tbn_storageaddrmLineOne.Content="REMOVE"
+                $TD_stp_storagePanel3.Visibility="Visible"
                 $TD_cb_storageConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameTwo.Text= $TD_Cred.UserName; 
             }
             {($_ -eq 4)} { 
+                $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
+                $TD_stp_storagePanel4.Visibility="Visible"
                 $TD_cb_storageConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameThree.Text= $TD_Cred.UserName; 
             }
             Default {Write-Host "What"}
