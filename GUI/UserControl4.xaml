@@ -1,0 +1,410 @@
+<UserControl 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainToggleBtnStyle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="MinWidth" Value="80" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="25,2,0,2" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainTextBoxStyle" TargetType="{x:Type TextBox}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="60" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="LightCyan">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Storage Credentials"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" x:Name="stp_storagePanel1" Orientation="Horizontal" Margin="2" >
+                    <ComboBox x:Name="cb_storageConnectionTyp" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
+                        <ComboBoxItem>ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageIPAdr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageUserName" MaxLength="20" MinWidth="100" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_storagePassword" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTyp, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <ToggleButton x:Name="tbn_storageaddrmLine" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" x:Name="stp_storagePanel2" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_storageaddrmLine, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                    <ComboBox x:Name="cb_storageConnectionTypOne" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageIPAdrOne" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageUserNameOne" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSameUserName, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_storagePasswordOne" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypOne, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <ToggleButton x:Name="tbn_storageaddrmLineOne" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" x:Name="stp_storagePanel3" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_storageaddrmLineOne, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                    <ComboBox x:Name="cb_storageConnectionTypTwo" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
+                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageIPAdrTwo" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageUserNameTwo" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSameUserName, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_storagePasswordTwo" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypTwo, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <ToggleButton x:Name="tbn_storageaddrmLineTwo" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="3" x:Name="stp_storagePanel4" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_storageaddrmLineTwo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                    <ComboBox  Name="cb_storageConnectionTypThree" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageIPAdrThree" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_storageUserNameThree" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSameUserName, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_storagePasswordThree" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypThree, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+
+                    <ToggleButton Style="{StaticResource MainToggleBtnStyle}" Visibility="Hidden"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Margin="0,10,2,0" Orientation="Vertical" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />   
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="1" Grid.Row="0" Content="Same UserName @ all Maschines :" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="2" Grid.Row="0" x:Name="cb_storageSameUserName" VerticalAlignment="Center" />
+                        <Label Grid.Column="1" Grid.Row="1" Content="Same Password @ all Maschines :" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="2" Grid.Row="1" x:Name="cb_storageSamePW" VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="SAN Credentials"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" x:Name="stp_sanPanel1" Orientation="Horizontal" Margin="2" >
+                    <ComboBox x:Name="cb_sanConnectionTyp" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBoxItem>ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="IP-Adresse :" Style="{StaticResource MainLabelStyle}" />
+                    <TextBox x:Name="tb_sanIPAdr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}" />
+                    <TextBox x:Name="tb_sanUserName" MaxLength="20" MinWidth="100" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}" />
+                    <PasswordBox x:Name="tb_sanPassword" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30" >
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTyp, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <ToggleButton x:Name="tbn_sanaddrmLine" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" x:Name="stp_sanPanel2" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_sanaddrmLine, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                    <ComboBox x:Name="cb_sanConnectionTypOne" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="IP-Adresse :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_sanIPAdrOne" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_sanUserNameOne" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSameUserName, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_sanPasswordOne" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypOne, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <ToggleButton x:Name="tbn_sanaddrmLineOne" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" x:Name="stp_sanPanel3" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_sanaddrmLineOne, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                    <ComboBox x:Name="cb_sanConnectionTypTwo" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="IP-Adresse :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_sanIPAdrTwo" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_sanUserNameTwo" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSameUserName, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_sanPasswordTwo" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypTwo, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <ToggleButton x:Name="tbn_sanaddrmLineTwo" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="3" x:Name="stp_sanPanel4" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_sanaddrmLineTwo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
+                    <ComboBox  Name="cb_sanConnectionTypThree" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBoxItem IsSelected="True">ssh</ComboBoxItem>
+                        <ComboBoxItem>plink</ComboBoxItem>
+                    </ComboBox>
+                    <Label  Content="IP-Adresse :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_sanIPAdrThree" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="tb_sanUserNameThree" MaxLength="20" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30" >
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSameUserName, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <PasswordBox x:Name="tb_sanPasswordThree" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30" >
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypThree, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+
+                    <ToggleButton Style="{StaticResource MainToggleBtnStyle}" Visibility="Hidden"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Margin="0,10,2,0" Orientation="Vertical" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />   
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="1" Grid.Row="0" Content="Same UserName @ all Maschines :" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="2" Grid.Row="0" x:Name="cb_sanSameUserName" VerticalAlignment="Center" />
+                        <Label Grid.Column="1" Grid.Row="1" Content="Same Password @ all Maschines :" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <CheckBox Grid.Column="2" Grid.Row="1" x:Name="cb_sanSamePW" VerticalAlignment="Center"/>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Grid.Column="0" Header="Export Settings"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Export Path :" Style="{StaticResource MainLabelStyle}"/>
+                <TextBox Grid.Column="1" x:Name="tb_ExportPath" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{StaticResource MainTextBoxStyle}"/>
+                <Button Grid.Column="2" x:Name="btn_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+            </Grid>
+        </GroupBox>
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+        <GroupBox Grid.Row="0" Header="Saved Credentials" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top">
+        <Grid>
+            <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                <Button x:Name="btn_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+            </StackPanel>
+            <Label Grid.Row="1" x:Name="lb_CerdExportPath" Content="Save Path" Style="{StaticResource MainLabelStyle}" HorizontalAlignment="Left" />
+        </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Connection to Devices" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top">
+            <Button x:Name="btn_ConnectTest" Content="Connection Test" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+        </GroupBox>
+        </StackPanel>
+    </Grid>
+</UserControl>
