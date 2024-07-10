@@ -61,6 +61,7 @@ function IBM_Host_Volume_Map {
                 Write-Host "plink"
                 $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
             }
+            <# next line one for testing #>
             #$TD_CollectVolInfo = Get-Content -Path "C:\Users\mailt\Documents\lsvdho.txt"
             Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_Host_Vol_Map_Temp.txt -InputObject $TD_CollectVolInfo
         }
