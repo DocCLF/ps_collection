@@ -51,7 +51,7 @@
                     SelectedIndex="0" 
                     SelectedValuePath="Content"
                     Style="{StaticResource MainComboBoxStyle}">
-                    <ComboBoxItem ToolTip="Selcet your FOS-Version">FOS 9.x</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True" ToolTip="Selcet your FOS-Version">FOS 9.x</ComboBoxItem>
                     <ComboBoxItem ToolTip="Selcet your FOS-Version">FOS 8.x</ComboBoxItem>
                     <ComboBoxItem ToolTip="Selcet your FOS-Version">FOS 7.x</ComboBoxItem>
                 </ComboBox>
@@ -59,7 +59,8 @@
                 <Button
                 x:Name="btn_FOS_SwitchShow"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Switch Show" />
+                Content="Switch Show" 
+                ToolTip="Click to refresh"/>
                 <!--FOS_PortLicenseShow-->
                 <Button
                 x:Name="btn_FOS_PortLicenseShow"
@@ -70,16 +71,20 @@
                 <Button
                 x:Name="btn_FOS_PortErrorShow"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Port Error Show" />
+                Content="Port Error Show" 
+                ToolTip="Click to refresh"/>
                 <!--FOS_PortBufferShow-->
                 <Button
                 x:Name="btn_FOS_PortBufferShow"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Port Buffer Show" />
+                Content="Port Buffer Show" 
+                ToolTip="Click to refresh"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="Resaults"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+            <Grid>
+            <StackPanel x:Name="stp_sanLicenseShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_PortLicenseShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -91,19 +96,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <TextBox Height="200" Width="200" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfo" Margin="5,0,5,5"/>
+                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <TextBox Height="200" Width="200" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfo2" Margin="5,0,5,5"/>
+                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 2" />
-                        <TextBox Height="200" Width="200" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfo3" Margin="5,0,5,5"/>
+                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 2" />
-                        <TextBox Height="200" Width="200" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfo4" Margin="5,0,5,5">
+                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5">
                             <TextBox.ToolTip>
                                 <StackPanel>
                                     <Image Source="data\flower.jpg"/>
@@ -113,6 +118,412 @@
                         </TextBox>
                     </StackPanel>
                 </Grid>
+            </StackPanel>
+            <StackPanel x:Name="stp_sanPortBufferShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_PortBufferShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid>
+                    <Grid.ColumnDefinitions> 
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <Label Content="Switch 1" />
+                        <ListView x:Name="lb_PortBufferShowOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Type" DisplayMemberBinding ="{Binding Type}" Width="60"/>  
+                                    <GridViewColumn Header="Mode" DisplayMemberBinding ="{Binding Mode}" Width="60"/>
+                                    <GridViewColumn Header="Max_Resv"  DisplayMemberBinding ="{Binding Max_Resv}" Width="60"/>  
+                                    <GridViewColumn Header="Tx" DisplayMemberBinding ="{Binding Tx}" Width="60"/>  
+                                    <GridViewColumn Header="Rx" DisplayMemberBinding ="{Binding Rx}" Width="60"/> 
+                                    <GridViewColumn Header="Usage" DisplayMemberBinding ="{Binding Usage}" Width="60"/> 
+                                    <GridViewColumn Header="Buffers" DisplayMemberBinding ="{Binding Buffers}" Width="60"/> 
+                                    <GridViewColumn Header="Distance" DisplayMemberBinding ="{Binding Distance}" Width="60"/> 
+                                    <GridViewColumn Header="Buffer" DisplayMemberBinding ="{Binding Buffer}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                        <Label Content="Switch 2" />
+                        <ListView x:Name="lb_PortBufferShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Type" DisplayMemberBinding ="{Binding Type}" Width="60"/>  
+                                    <GridViewColumn Header="Mode" DisplayMemberBinding ="{Binding Mode}" Width="60"/>
+                                    <GridViewColumn Header="Max_Resv"  DisplayMemberBinding ="{Binding Max_Resv}" Width="60"/>  
+                                    <GridViewColumn Header="Tx" DisplayMemberBinding ="{Binding Tx}" Width="60"/>  
+                                    <GridViewColumn Header="Rx" DisplayMemberBinding ="{Binding Rx}" Width="60"/> 
+                                    <GridViewColumn Header="Usage" DisplayMemberBinding ="{Binding Usage}" Width="60"/> 
+                                    <GridViewColumn Header="Buffers" DisplayMemberBinding ="{Binding Buffers}" Width="60"/> 
+                                    <GridViewColumn Header="Distance" DisplayMemberBinding ="{Binding Distance}" Width="60"/> 
+                                    <GridViewColumn Header="Buffer" DisplayMemberBinding ="{Binding Buffer}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                        <Label Content="Switch 3" />
+                        <ListView x:Name="lb_PortBufferShowThree" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Type" DisplayMemberBinding ="{Binding Type}" Width="60"/>  
+                                    <GridViewColumn Header="Mode" DisplayMemberBinding ="{Binding Mode}" Width="60"/>
+                                    <GridViewColumn Header="Max_Resv"  DisplayMemberBinding ="{Binding Max_Resv}" Width="60"/>  
+                                    <GridViewColumn Header="Tx" DisplayMemberBinding ="{Binding Tx}" Width="60"/>  
+                                    <GridViewColumn Header="Rx" DisplayMemberBinding ="{Binding Rx}" Width="60"/> 
+                                    <GridViewColumn Header="Usage" DisplayMemberBinding ="{Binding Usage}" Width="60"/> 
+                                    <GridViewColumn Header="Buffers" DisplayMemberBinding ="{Binding Buffers}" Width="60"/> 
+                                    <GridViewColumn Header="Distance" DisplayMemberBinding ="{Binding Distance}" Width="60"/> 
+                                    <GridViewColumn Header="Buffer" DisplayMemberBinding ="{Binding Buffer}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                        <Label Content="Switch 4" />
+                        <ListView x:Name="lb_PortBufferShowFour" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Type" DisplayMemberBinding ="{Binding Type}" Width="60"/>  
+                                    <GridViewColumn Header="Mode" DisplayMemberBinding ="{Binding Mode}" Width="60"/>
+                                    <GridViewColumn Header="Max_Resv"  DisplayMemberBinding ="{Binding Max_Resv}" Width="60"/>  
+                                    <GridViewColumn Header="Tx" DisplayMemberBinding ="{Binding Tx}" Width="60"/>  
+                                    <GridViewColumn Header="Rx" DisplayMemberBinding ="{Binding Rx}" Width="60"/> 
+                                    <GridViewColumn Header="Usage" DisplayMemberBinding ="{Binding Usage}" Width="60"/> 
+                                    <GridViewColumn Header="Buffers" DisplayMemberBinding ="{Binding Buffers}" Width="60"/> 
+                                    <GridViewColumn Header="Distance" DisplayMemberBinding ="{Binding Distance}" Width="60"/> 
+                                    <GridViewColumn Header="Buffer" DisplayMemberBinding ="{Binding Buffer}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <StackPanel x:Name="stp_sanPortErrorShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_PortErrorShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid>
+                    <Grid.ColumnDefinitions> 
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <Label Content="Switch 1" />
+                        <ListView x:Name="lb_PortErrorShowOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
+                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
+                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
+                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
+                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
+                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
+                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
+                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
+                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
+                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
+                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
+                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
+                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
+                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
+                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
+                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                        <Label Content="Switch 2" />
+                        <ListView x:Name="lb_PortErrorShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
+                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
+                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
+                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
+                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
+                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
+                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
+                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
+                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
+                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
+                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
+                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
+                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
+                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
+                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
+                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                        <Label Content="Switch 3" />
+                        <ListView x:Name="lb_PortErrorShowThree" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
+                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
+                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
+                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
+                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
+                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
+                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
+                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
+                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
+                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
+                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
+                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
+                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
+                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
+                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
+                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                        <Label Content="Switch 4" />
+                        <ListView x:Name="lb_PortErrorShowFour" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
+                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
+                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
+                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
+                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
+                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
+                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
+                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
+                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
+                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
+                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
+                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
+                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
+                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
+                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
+                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
+                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
+                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <StackPanel x:Name="stp_sanSwitchShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_SwitchShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid>
+                    <Grid.ColumnDefinitions> 
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <Label Content="Switch 1" />
+                        <ListView x:Name="lb_SwitchShowOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView> 
+                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
+                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
+                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
+                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
+                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
+                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
+                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                        <Label Content="Switch 2" />
+                        <ListView x:Name="lb_SwitchShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView> 
+                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
+                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
+                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
+                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
+                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
+                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
+                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                        <Label Content="Switch 3" />
+                        <ListView x:Name="lb_SwitchShowThree" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView> 
+                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
+                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
+                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
+                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
+                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
+                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
+                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                        <Label Content="Switch 4" />
+                        <ListView x:Name="lb_SwitchShowFour" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView> 
+                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
+                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
+                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
+                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
+                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
+                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
+                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
+                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            </Grid>
             </ScrollViewer>
         </GroupBox>
     </Grid>
