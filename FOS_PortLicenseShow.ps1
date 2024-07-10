@@ -1,4 +1,4 @@
-function FOS_PortLicenseShow {
+function FOS_PortLicenseShowInfo {
     <#
     .SYNOPSIS
     Get SAN-Switch License Infos 
@@ -20,13 +20,11 @@ function FOS_PortLicenseShow {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("Host","Hostcluster","Nofilter")]
-        [string]$FilterType = "Nofilter",
-        [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath,
-        [string]$TD_RefreshView
+        [string]$TD_RefreshView,
+        [string]$TD_FOSVersion
     )
     
     begin{
@@ -35,14 +33,24 @@ function FOS_PortLicenseShow {
 
         #[int]$nbr=0
 
-        #if($TD_Device_ConnectionTyp -eq "ssh"){
-        #    Write-Debug -Message "ssh |$(Get-Date)"
-        #    $FOS_PortLicenseInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "switchshow && license --show -port"
-        #}else {
-        #    Write-Debug -Message "plink |$(Get-Date)"
-        #    $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "switchshow && license --show -port"
-        #}
+        if($TD_Device_ConnectionTyp -eq "ssh"){
+           Write-Debug -Message "ssh |$(Get-Date)"
+           if($TD_FOSVersion -eq "FOS 9.x"){
+              $FOS_PortLicenseInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "license --show -port"
+           }else {
+              $FOS_PortLicenseInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "licenseShow"
+           }
+        }else {
+            Write-Debug -Message "plink |$(Get-Date)"
+           if($TD_FOSVersion -eq "FOS 9.x"){
+              $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "license --show -port"
+           }else {
+              $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "licenseShow"
+           }
+        }
+        <# next line one for testing #>
         $FOS_PortLicenseInfo = Get-Content -Path "C:\Users\mailt\Documents\0.txt"
+        Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortLicenseShow_Temp.txt -InputObject $FOS_MainInformation
 
     }
 
@@ -51,16 +59,29 @@ function FOS_PortLicenseShow {
         $i = $FOS_PortLicenseInfo.Count
 
         0..$i |ForEach-Object {
-            if($FOS_PortLicenseInfo[$_] -match '023f00'){
-                $TD_Resaults = $FOS_PortLicenseInfo | Select-Object -Skip ($_ +1)
-                $i = $_
-            }
+            $TD_Resaults = $FOS_PortLicenseInfo | Select-Object #-Skip ($_ +1)
+            $i = $_
         }  
     }
-    end{
-        Write-Debug -Message "FOS_PortLicenseShow End block |$(Get-Date)"
-        return $TD_Resaults
-        Write-Debug -Message "Resault: $FOS_PortInfo |$(Get-Date)"
-        Clear-Variable TD* -Scope Global;
+    end {
+        <# returns the hashtable for further processing, not mandatory but the safe way #>
+        Write-Debug -Message "FOS_PortLicenseShow End block |$(Get-Date) `n"
+        <# export y or n #>
+        if($TD_Export -eq "yes"){
+            <# exported to .\Host_Volume_Map_Result.csv #>
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $TD_Resaults | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $TD_Resaults | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
+        }else {
+            <# output on the promt #>
+            return $TD_Resaults
+        }
+
+        return $TD_Resaults 
+        
     }
 }

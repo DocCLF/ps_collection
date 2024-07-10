@@ -1,5 +1,4 @@
 
-
 function FOS_SwitchShowInfo {
     <#
     .SYNOPSIS
@@ -16,19 +15,41 @@ function FOS_SwitchShowInfo {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
-        [System.Object]$FOS_MainInformation
+        [Int16]$TD_Line_ID,
+        [string]$TD_Device_ConnectionTyp,
+        [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_PW,
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("yes","no")]
+        [string]$TD_Export = "yes",
+        [string]$TD_Exportpath,
+        [string]$TD_RefreshView
     )
     
     begin {
-
+        <# suppresses error messages #>
+        $ErrorActionPreference="SilentlyContinue"
         Write-Debug -Message "Start Func GET_SwitchShowInfo |$(Get-Date)`n "
-
         <#----- Array for information of the switchports ----#>
         $FOS_SwBasicPortDetails=@()
         <#----- Array for information of the used switchports ----#>
         $FOS_usedPorts =@()
+        <# int for the progressbar #>
+        [int]$nbr=0
 
+        <# Connection to the system via ssh and filtering and provision of data #>
+        <# Action when all if and elseif conditions are false #>
+        if($TD_Device_ConnectionTyp -eq "ssh"){
+            $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "switchshow"
+        }else {
+            Write-Host "plink"
+            $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "switchshow"
+        }
+        <# next line one for testing #>
+        #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\swsh.txt"
+        Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_SwitchShow_Temp.txt -InputObject $FOS_MainInformation
+        
         $FOS_InfoCount = $FOS_MainInformation.count
         Write-Debug -Message "Number of Lines: $FOS_InfoCount "
         0..$FOS_InfoCount |ForEach-Object {
@@ -39,11 +60,9 @@ function FOS_SwitchShowInfo {
                 $FOS_SwShowArry_temp = $FOS_SWShowTemp |Select-Object -Skip 2   
             }
         }
-        
     }
     
     process {
-
         Write-Debug -Message "Process Func GET_SwitchShowInfo |$(Get-Date)`n "
         <# fill the var with a dummy #>
         $FOS_PortConnect = "empty"
@@ -80,22 +99,33 @@ function FOS_SwitchShowInfo {
                 }
                 $FOS_SwBasicPortDetails += $FOS_SWsh
             }
-
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
             if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}
         }
-
     }
     
     end {
-
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "End Func GET_SwitchShowInfo |$(Get-Date)`n "
-
+        <# export y or n #>
+        if($TD_Export -eq "yes"){
+            <# exported to .\Host_Volume_Map_Result.csv #>
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $FOS_SwBasicPortDetails | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $FOS_SwBasicPortDetails | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
+        }else {
+            <# output on the promt #>
+            return $FOS_SwBasicPortDetails
+        }
         Write-Debug -Message "$(Get-Date) return:`n $FOS_SwBasicPortDetails `n "
         Write-Debug -Message "$(Get-Date) return:`n $FOS_usedPorts `n "
-        
-        return $FOS_SwBasicPortDetails, $FOS_usedPorts
+
+        <# FOS_usedPorts commented out can be used later via filter option if necessary #>
+        return $FOS_SwBasicPortDetails #, $FOS_usedPorts 
         
     }
 }
