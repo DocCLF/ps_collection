@@ -49,7 +49,7 @@ function FOS_PortLicenseShowInfo {
            }
         }
         <# next line one for testing #>
-        $FOS_PortLicenseInfo = Get-Content -Path "C:\Users\mailt\Documents\0.txt"
+        #$FOS_PortLicenseInfo = Get-Content -Path "C:\Users\mailt\Documents\0.txt"
         Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortLicenseShow_Temp.txt -InputObject $FOS_MainInformation
 
     }
