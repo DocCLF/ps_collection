@@ -63,7 +63,7 @@
         </GroupBox>       
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
-            <Grid>
+                <Grid>
                 <StackPanel  x:Name="stp_HostVolInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_HostVolumeMap, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.RowDefinitions>
