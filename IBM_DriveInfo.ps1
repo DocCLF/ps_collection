@@ -72,7 +72,7 @@ function IBM_DriveInfo {
                 $TD_CollectInfosTemp = $TD_CollectInfos |Select-Object -Skip $_
             }
         }
-        Start-Sleep -Seconds 0.5
+        Start-Sleep -Seconds 1
     }
     
     process {
@@ -126,12 +126,12 @@ function IBM_DriveInfo {
             }
             #$TD_FileInfo=Get-ChildItem Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
             Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 1
             #Invoke-Item "$TD_Exportpath\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             Write-Host "Result for:`nName: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 2.5
             return $TD_DriveOverview
         }
         return $TD_DriveOverview

@@ -149,7 +149,7 @@ function IBM_FCPortStats {
         }else {
             <# output on the promt #>
             Write-Host "Result:`n" -ForegroundColor Yellow
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 2.5
             return $TD_PortStats_Overview
         }
         return $TD_PortStats_Overview

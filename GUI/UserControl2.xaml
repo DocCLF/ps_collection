@@ -157,7 +157,7 @@
                             </ListView.View>
                         </ListView >
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                    <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
                         <ListView x:Name="lb_PortBufferShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>

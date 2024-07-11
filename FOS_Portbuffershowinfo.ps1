@@ -39,10 +39,10 @@ function FOS_PortbufferShowInfo {
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
             Write-Debug -Message "ssh |$(Get-Date)"
-            $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "porterrshow"
+            $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "portbuffershow"
         }else {
             Write-Debug -Message "plink |$(Get-Date)"
-            $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "porterrshow"
+            $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portbuffershow"
         }
         <# next line one for testing #>
         #$FOS_MainInformation=Get-Content -Path "C:\Users\mailt\Documents\pbs_s.txt"
