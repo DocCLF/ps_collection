@@ -431,18 +431,18 @@ $TD_btn_ImportCred.add_click({
                     $TD_cb_sanConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserName.Text= $TD_Cred.UserName; 
                 }
                 {($_ -eq 2)} { 
-                    $TD_tbn_storageaddrmLine.Content="REMOVE"
-                    $TD_stp_storagePanel2.Visibility="Visible"
+                    $TD_tbn_sanaddrmLine.Content="REMOVE"
+                    $TD_stp_sanPanel2.Visibility="Visible"
                     $TD_cb_sanConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameOne.Text= $TD_Cred.UserName; 
                 }
                 {($_ -eq 3)} { 
-                    $TD_tbn_storageaddrmLineOne.Content="REMOVE"
-                    $TD_stp_storagePanel3.Visibility="Visible"
+                    $TD_tbn_sanaddrmLineOne.Content="REMOVE"
+                    $TD_stp_sanPanel3.Visibility="Visible"
                     $TD_cb_sanConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameTwo.Text= $TD_Cred.UserName; 
                 }
                 {($_ -eq 4)} { 
-                    $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
-                    $TD_stp_storagePanel4.Visibility="Visible"
+                    $TD_tbn_sanaddrmLineTwo.Content="REMOVE"
+                    $TD_stp_sanPanel4.Visibility="Visible"
                     $TD_cb_sanConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameThree.Text= $TD_Cred.UserName; 
                 }
                 Default {Write-Host "What"}
