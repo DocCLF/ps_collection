@@ -43,9 +43,9 @@ function FOS_PortLicenseShowInfo {
         }else {
             Write-Debug -Message "plink |$(Get-Date)"
            if($TD_FOSVersion -eq "FOS 9.x"){
-              $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW "license --show -port"
+              $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "license --show -port"
            }else {
-              $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW "licenseShow"
+              $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "licenseShow"
            }
         }
         <# next line one for testing #>
