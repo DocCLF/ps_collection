@@ -112,7 +112,7 @@ function Get_CredGUIInfos {
     #Write-Host $TD_IPConnectionTest.Status -ForegroundColor Yellow
     #if(($TD_IPCheck)-and($TD_IPConnectionTest.Status-eq "Success")){
     if(($TD_IPCheck)){    
-        if(($TD_cb_storageSamePW.IsChecked)-and($TD_ConnectionTyp -eq "plink")){
+        if((($TD_cb_storageSamePW.IsChecked)-or($TD_cb_sanSamePW.IsChecked))-and($TD_ConnectionTyp -eq "plink")){
             $TD_Password=$TD_tb_storagePassword
         }elseif (($TD_ConnectionTyp -eq "ssh")) {
             $TD_Password=""
