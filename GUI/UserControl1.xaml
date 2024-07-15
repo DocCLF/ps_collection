@@ -82,8 +82,8 @@
                             <ComboBoxItem>2</ComboBoxItem>
                         </ComboBox>
                         <Button x:Name="btn_UpFilHVM" Style="{StaticResource MainBtnStyle}" Content="Update Filter" />
-                        <!--Label need a better place to avoid repetition of code -->
-                        <Label x:Name="label_ExpPHVM" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
+                        <!--Label need a better place to avoid repetition of code 
+                        <Label x:Name="label_ExpPath" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/> -->
                         </StackPanel>
                         <ListView Grid.Row="1" x:Name="lb_HostVolInfo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.View>
@@ -132,9 +132,9 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <!--Label need a better place to avoid repetition of code -->
-                        <Label Grid.Row="0" x:Name="label_ExpPDI" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <ListView Grid.Row="1" Grid.Column="0" x:Name="lb_DriveInfo" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <!--Label need a better place to avoid repetition of code 
+                        <Label Grid.Row="0" x:Name="label_ExpPDI" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> -->
+                        <ListView Grid.Row="0" Grid.Column="0" x:Name="lb_DriveInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="DriveID"  DisplayMemberBinding ="{Binding DriveID}"/>  
@@ -150,7 +150,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView Grid.Row="1" Grid.Column="0" x:Name="lb_DriveInfoTwo" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView Grid.Row="0" Grid.Column="1" x:Name="lb_DriveInfoTwo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -175,7 +175,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView Grid.Row="1" Grid.Column="1" x:Name="lb_DriveInfoThree" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView Grid.Row="1" Grid.Column="0" x:Name="lb_DriveInfoThree" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -200,7 +200,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView Grid.Row="1" Grid.Column="1" x:Name="lb_DriveInfoFour" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView Grid.Row="1" Grid.Column="1" x:Name="lb_DriveInfoFour" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -240,15 +240,15 @@
                         </ComboBox>
                         <!--Button need a implem. for more as one Storage  -->
                         <!-- <Button x:Name="btn_UpFilFCPS" Style="{StaticResource MainBtnStyle}" Content="Update Filter" /> -->
-                        <!--Label need a better place to avoid repetition of code -->
-                        <Label x:Name="label_ExpPFCPS" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
+                        <!--Label need a better place to avoid repetition of code
+                        <Label x:Name="label_ExpPFCPS" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/> -->
                         <!--Label with info to command need to checked -->
                         <!-- <Label Content="You need admin rights to use this command." Style="{StaticResource MainLabelStyle}" Margin="10,5,0,5"/> -->
                         </StackPanel>
-                        <ListView Grid.Row="1" x:Name="lb_FCPortStats" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <StackPanel Grid.Row="1">
+                        <ListView x:Name="lb_FCPortStatsOne" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Grouping}" />
                                     <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
                                     <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
                                     <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
@@ -270,10 +270,9 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView Grid.Row="1" x:Name="lb_FCPortStatsTwo" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <ListView x:Name="lb_FCPortStatsTwo" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Grouping}" />
                                     <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
                                     <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
                                     <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
@@ -295,10 +294,9 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView Grid.Row="1" x:Name="lb_FCPortStatsThree" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <ListView x:Name="lb_FCPortStatsThree" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Grouping}" />
                                     <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
                                     <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
                                     <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
@@ -320,10 +318,9 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView Grid.Row="1" x:Name="lb_FCPortStatsFour" MinWidth="800" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <ListView x:Name="lb_FCPortStatsFour" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn DisplayMemberBinding="{Binding Grouping}" />
                                     <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
                                     <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
                                     <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
@@ -345,6 +342,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
+                        </StackPanel>  
                     </Grid>
                 </StackPanel>   
                 </Grid> 

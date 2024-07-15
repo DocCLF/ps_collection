@@ -252,18 +252,22 @@ function OpenFile_from_Directory {
 
 <# Button Area Menu #>
 $TD_btn_IBM_SV.add_click({
+    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl1.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl1)}
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    
 })
 $TD_btn_Broc_SAN.add_click({
+    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl2.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl2)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
 })
 $TD_btn_Stor_San.add_click({
+    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
@@ -359,6 +363,7 @@ $TD_btn_ChangeExportPath.add_click({
         Write-Host "Directory selected is $TD_DirectoryName"
         $TD_tb_ExportPath.Text = $TD_DirectoryName
     }
+    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
 })
 <# Button Credentials In-/ Export #>
 $TD_btn_ExportCred.add_click({
@@ -475,7 +480,6 @@ $TD_tb_UserName.Add_TextChanged({
 $TD_btn_UpFilHVM.add_click({
     $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_cb_ListFilterStorageHVM.Text -FilterType $TD_cb_StorageHVM.Text -TD_RefreshView "Update"
     Start-Sleep -Seconds 0.5
-    $TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
@@ -531,7 +535,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
         }
         #Write-Host $TD_Host_Volume_Map
     }
-    $TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
@@ -588,7 +592,7 @@ $TD_btn_IBM_DriveInfo.add_click({
     }
     #Write-Host $TD_Host_Volume_Map
 }
-    $TD_label_ExpPDI.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     $TD_stp_HostVolInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_DriveInfo.Visibility="Visible"
@@ -621,31 +625,31 @@ $TD_btn_IBM_FCPortStats.add_click({
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Storage $TD_cb_FCPortStats.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfo.ItemsSource = $TD_FCPortStats
+                $TD_lb_FCPortStatsOne.ItemsSource = $TD_FCPortStats
             }
             {($_ -eq 2)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Storage $TD_cb_FCPortStats.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfoTwo.ItemsSource = $TD_FCPortStats
+                $TD_lb_FCPortStatsTwo.ItemsSource = $TD_FCPortStats
             }
             {($_ -eq 3)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Storage $TD_cb_FCPortStats.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfoThree.ItemsSource = $TD_FCPortStats
+                $TD_lb_FCPortStatsThree.ItemsSource = $TD_FCPortStats
             }
             {($_ -eq 4)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.Password -TD_Storage $TD_cb_FCPortStats.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfoFour.ItemsSource = $TD_FCPortStats
+                $TD_lb_FCPortStatsFour.ItemsSource = $TD_FCPortStats
         }
         Default {Write-Debug "Nothing" }
     }
     #Write-Host $TD_Host_Volume_Map
 }
-    $TD_label_ExpPFCPS.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Visible"

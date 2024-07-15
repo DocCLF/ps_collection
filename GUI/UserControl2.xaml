@@ -96,19 +96,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <TextBox MinHeight="0" MinWidth="0" HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5">
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5">
                             <TextBox.ToolTip>
                                 <StackPanel>
                                     <Image Source="data\flower.jpg"/>

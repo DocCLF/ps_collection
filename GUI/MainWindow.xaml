@@ -16,6 +16,13 @@
                 <Setter Property="Margin" Value="5" />
                 <Setter Property="Padding" Value="2" />
             </Style>
+            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="Height" Value="25" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -32,6 +39,7 @@
             <Button x:Name="btn_Stor_San" Content="Storage + SAN" Style="{StaticResource MainBtnStyle}" />
             <!--Settings-->
             <Button x:Name="btn_Settings" Content="Tool Settings" Style="{StaticResource MainBtnStyle}" />
+            <Label x:Name="label_ExpPath" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
         </StackPanel>
         <!--CloseAll GUI-->
         <Button x:Name="btn_CloseAll" Content="Exit" Style="{StaticResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
