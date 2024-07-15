@@ -58,7 +58,6 @@ function IBM_Host_Volume_Map {
             if($TD_Device_ConnectionTyp -eq "ssh"){
                 $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
             }else {
-                Write-Host "plink"
                 $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
             }
             <# next line one for testing #>

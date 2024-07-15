@@ -152,10 +152,11 @@ function IBM_FCPortStats {
             Start-Sleep -Seconds 2.5
             return $TD_PortStats_Overview
         }
+	Write-Host $TD_PortStats_Overview -ForegroundColor Yellow
         return $TD_PortStats_Overview
         <# wait a moment #>
-        Start-Sleep -Seconds 1
+        #Start-Sleep -Seconds 1
         <# Cleanup all TD* Vars #>
-        Clear-Variable TD* -Scope Global
+        #Clear-Variable TD* -Scope Global
     }
 }

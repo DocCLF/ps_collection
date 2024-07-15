@@ -55,7 +55,6 @@ function IBM_DriveInfo {
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
         $TD_DriveOverview = @()
-        [string]$TD_SlotOld = "0"
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
@@ -70,6 +69,10 @@ function IBM_DriveInfo {
             if($TD_CollectInfos[$_] -match '^serial_number'){
                 $TD_NodeInfoTemp = $TD_CollectInfos |Select-Object -First $_
                 $TD_CollectInfosTemp = $TD_CollectInfos |Select-Object -Skip $_
+                if([string]::IsNullOrEmpty($TD_TransProt)){
+                    $TD_TransProt = (($TD_CollectInfos|Select-String -Pattern '^transport_protocol\s+(\w+)' -AllMatches).Matches.Groups[1].Value)
+                    Write-Host $TD_TransProt -ForegroundColor Red
+                }
             }
         }
         Start-Sleep -Seconds 1
@@ -86,26 +89,32 @@ function IBM_DriveInfo {
         }
 
         <# Drive Info #>
-        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveCap,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,DriveStatus,DriveCap,ProductID,FWlev,Slot
+        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap
         foreach($TD_CollectInfo in $TD_CollectInfosTemp){
             [int]$TD_DriveSplitInfos.DriveID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.DriveCap = ($TD_CollectInfo|Select-String -Pattern '^capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.PhyDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.PhyUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.EffeUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.DriveStatus = ($TD_CollectInfo|Select-String -Pattern '^status\s+(online|offline|degraded)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.DriveCap = ($TD_CollectInfo|Select-String -Pattern '^capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.ProductID = ($TD_CollectInfo|Select-String -Pattern '^product_id\s+([A-Z0-9]+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.FWlev = ($TD_CollectInfo|Select-String -Pattern '^firmware_level\s+([A-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.Slot = ($TD_CollectInfo|Select-String -Pattern '^slot_id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-            
-            if($TD_DriveSplitInfos.Slot -ne $TD_SlotOld){
-                Write-Debug -Message $TD_DriveSplitInfos
-                $TD_SlotOld=$TD_DriveSplitInfos.Slot
-            }else {
-                Write-Debug -Message ($TD_DriveSplitInfos.Slot -ne $TD_SlotOld)
-                $TD_DriveOverview += $TD_DriveSplitInfos
-                $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveCap,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,DriveStatus,DriveCap,ProductID,FWlev,Slot
-            }
+            [string]$TD_DriveSplitInfos.PhyDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.PhyUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.EffeUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+
+            <# Not the best option but for the first stepp ok #>
+            If($TD_TransProt -eq "nvme"){
+                    if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.EffeUsedDriveCap)){
+                        $TD_DriveOverview += $TD_DriveSplitInfos
+                        Write-Debug -Message  $TD_DriveOverview
+                        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap
+                    }
+                }else{
+                    if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.PhyDriveCap)){
+                        $TD_DriveOverview += $TD_DriveSplitInfos
+                        Write-Debug -Message  $TD_DriveOverview
+                        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap
+                    }
+                }
 
             <# Progressbar  #>
             $ProgCounter++
@@ -113,6 +122,7 @@ function IBM_DriveInfo {
             Write-Progress -Activity "Create the list" -Status "Progress:" -PercentComplete $Completed
         }
     }
+
     end{
         <# export y or n #>
         if($TD_export -eq "yes"){
@@ -135,9 +145,10 @@ function IBM_DriveInfo {
             return $TD_DriveOverview
         }
         return $TD_DriveOverview
+        Write-Host $TD_DriveOverview -ForegroundColor Green
         <# wait a moment #>
-        Start-Sleep -Seconds 1
+        #Start-Sleep -Seconds 1
         <# Cleanup all TD* Vars #>
-        Clear-Variable TD* -Scope Global
+        #Clear-Variable TD* -Scope Global
     }
 }
