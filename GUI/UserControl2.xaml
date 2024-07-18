@@ -48,6 +48,7 @@
                 <!--FOS_Versio-->
                 <ComboBox
                     x:Name="cb_FOS_Version"
+                    Foreground="Red"
                     SelectedIndex="0" 
                     SelectedValuePath="Content"
                     Style="{StaticResource MainComboBoxStyle}">
@@ -55,6 +56,12 @@
                     <ComboBoxItem ToolTip="Selcet your FOS-Version">FOS 8.x</ComboBoxItem>
                     <ComboBoxItem ToolTip="Selcet your FOS-Version">FOS 7.x</ComboBoxItem>
                 </ComboBox>
+                <!--FOS_BasicSwichInfo-->
+                <Button
+                x:Name="btn_FOS_BasicSwitchInfo"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Switch Info" 
+                ToolTip="Click to refresh"/>                
                 <!--FOS_SwitchShow-->
                 <Button
                 x:Name="btn_FOS_SwitchShow"
@@ -84,6 +91,54 @@
         <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="Resaults"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <Grid>
+            <StackPanel x:Name="stp_sanBasicSwitchInfo" Margin="2" Visibility="{Binding ElementName=btn_FOS_BasicSwitchInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <Label Content="Switch 1" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoOne" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                        <Label Content="Switch 2" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoTwo" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                        <Label Content="Switch 3" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoThree" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                        <Label Content="Switch 4" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoFour" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>            
             <StackPanel x:Name="stp_sanLicenseShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_PortLicenseShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <Grid>
                     <Grid.ColumnDefinitions>

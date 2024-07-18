@@ -402,9 +402,11 @@
             <Label Grid.Row="1" x:Name="lb_CerdExportPath" Content="Save Path" Style="{StaticResource MainLabelStyle}" HorizontalAlignment="Left" />
         </Grid>
         </GroupBox>
+        <!-- Connection Test needs a better option for pwsh 5.1
         <GroupBox Grid.Row="1" Header="Connection to Devices" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top">
             <Button x:Name="btn_ConnectTest" Content="Connection Test" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
         </GroupBox>
+        -->
         </StackPanel>
     </Grid>
 </UserControl>

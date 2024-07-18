@@ -270,7 +270,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView >
-                        <ListView x:Name="lb_FCPortStatsTwo" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <!-- <ListView x:Name="lb_FCPortStatsTwo" HorizontalAlignment="Left" VerticalAlignment="Top">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
@@ -341,7 +341,7 @@
                                     <GridViewColumn Header="RXPwr" DisplayMemberBinding ="{Binding RXPwr}"/> 
                                 </GridView>
                             </ListView.View>
-                        </ListView >
+                        </ListView > -->
                         </StackPanel>  
                     </Grid>
                 </StackPanel>   
