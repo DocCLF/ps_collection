@@ -283,11 +283,6 @@ $TD_btn_Broc_SAN.add_click({
 })
 $TD_btn_Stor_San.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    $reault = FOS_BasicSwitchInfos
-
-    $TD_dgUsers.ItemsSource = $reault
-     
-    Write-Host $reault
     if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
@@ -735,6 +730,7 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanBasicSwitchInfo.Visibility="Visible"
 })
 
@@ -796,7 +792,79 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_stp_sanLicenseShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Visible"
+})
+
+$TD_btn_FOS_ZoneDetailsShow.add_click({
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_sanConnectionTypOne.Text -TD_IPAdresse $TD_tb_sanIPAdrOne.Text -TD_UserName $TD_tb_sanUserNameOne.Text -TD_Password $TD_tb_sanPasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_sanConnectionTypTwo.Text -TD_IPAdresse $TD_tb_sanIPAdrTwo.Text -TD_UserName $TD_tb_sanUserNameTwo.Text -TD_Password $TD_tb_sanPasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate #>
+        #Write-Debug -Message $TD_Credential
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+                $TD_FOS_ZoneShow, $FOS_EffeZoneNameOne = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Write-Host $TD_FOS_ZoneShow -ForegroundColor Yellow
+                Write-Host $FOS_EffeZoneNameOne -ForegroundColor Green
+                Start-Sleep -Seconds 0.5
+                $TD_lb_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
+            }
+            {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {            
+                $TD_FOS_ZoneShow, $FOS_EffeZoneNameTwo = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Write-Host $FOS_EffeZoneNameOne $FOS_EffeZoneNameTwo
+                if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameTwo){
+                Start-Sleep -Seconds 0.5
+                $TD_lb_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+            }
+            {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {            
+                $TD_FOS_ZoneShow, $FOS_EffeZoneNameThree = FOS_ZoneDetails  -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                Write-Host $FOS_EffeZoneNameOne $FOS_EffeZoneNameThree
+                if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameThree){
+                    if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
+                        Start-Sleep -Seconds 0.5
+                        $TD_lb_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+                    }
+            }
+            <# not needed becaus max support at moment are 2 fabs #>
+            #{($_ -eq 4) }
+            #{            
+            #    $TD_FOS_PortbufferShow += FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+            #    Start-Sleep -Seconds 0.5
+            #    $TD_lb_PortBufferShowFour.ItemsSource =$TD_FOS_PortbufferShow
+            #}
+            Default {Write-Debug "Nothing" }
+        }
+    }
+    
+    <#Chang to correct Content etc.#>
+    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
+    Start-Sleep -Seconds 0.5
+    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
+    $TD_stp_sanLicenseShow.Visibility="Collapsed"
+    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
+    $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Visible"
 })
 
 $TD_btn_FOS_PortLicenseShow.add_click({
@@ -855,6 +923,7 @@ $TD_btn_FOS_PortLicenseShow.add_click({
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanLicenseShow.Visibility="Visible"
 
 })
@@ -917,6 +986,7 @@ $TD_btn_FOS_PortErrorShow.add_click({
     $TD_stp_sanLicenseShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Visible"
 })
 
@@ -978,6 +1048,7 @@ $TD_btn_FOS_PortBufferShow.add_click({
     $TD_stp_sanLicenseShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Visible"
 })
  

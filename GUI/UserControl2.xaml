@@ -74,6 +74,12 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="Port License Show" 
                 ToolTip="Click to submit your information"/>
+                <!--FOS_ZoneDetails-->
+                <Button
+                x:Name="btn_FOS_ZoneDetailsShow"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Effective Zone Show" 
+                ToolTip="Click to submit your information"/>
                 <!--FOS_PortErrorShow-->
                 <Button
                 x:Name="btn_FOS_PortErrorShow"
@@ -572,6 +578,60 @@
                                     <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
                                     <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
                                     <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <StackPanel x:Name="stp_sanZoneDetailsShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_ZoneDetailsShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <Grid>
+                    <Grid.ColumnDefinitions> 
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <Label Content="Switch 1" />
+                        <ListView x:Name="lb_ZoneDetailsOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView> 
+                                    <GridViewColumn Header="Zone"  DisplayMemberBinding ="{Binding Zone}" Width="auto"/>  
+                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}" Width="auto"/>  
+                                    <GridViewColumn Header="Alias" DisplayMemberBinding ="{Binding Alias}" Width="auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView >
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                        <Label Content="Switch 2" />
+                        <ListView x:Name="lb_ZoneDetailsTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                            <ListView.Style>
+                              <Style TargetType="ListView">
+                                <Style.Triggers>
+                                  <Trigger Property="HasItems" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                  </Trigger>
+                                </Style.Triggers>
+                              </Style>
+                            </ListView.Style>
+                            <ListView.View>
+                                <GridView> 
+                                    <GridViewColumn Header="Zone"  DisplayMemberBinding ="{Binding Zone}" Width="auto"/>  
+                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}" Width="auto"/>  
+                                    <GridViewColumn Header="Alias" DisplayMemberBinding ="{Binding Alias}" Width="auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView >
