@@ -595,7 +595,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label Content="Switch 1" />
+                        <Label Content="Fabric A" />
                         <ListView x:Name="lb_ZoneDetailsOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
@@ -616,7 +616,7 @@
                         </ListView >
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
+                        <Label Content="Fabric B" />
                         <ListView x:Name="lb_ZoneDetailsTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
