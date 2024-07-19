@@ -26,7 +26,7 @@ function FOS_BasicSwitchInfos {
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath
     )
-    #"firmwareshow && ipaddrshow && switchshow
+    
     begin {
 
         Write-Debug -Message "Start Func GET_BasicSwitchInfos |$(Get-Date)` "
