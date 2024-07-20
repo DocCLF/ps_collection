@@ -126,11 +126,28 @@ function FOS_ZoneDetails  {
         }
 
     }
-    end{
+    end {
+        <# returns the hashtable for further processing, not mandatory but the safe way #>
+        Write-Debug -Message "End Func FOS_ZoneDetails |$(Get-Date)`n "
+        <# export y or n #>
+        if($TD_Export -eq "yes"){
+            <# exported to .\Host_Volume_Map_Result.csv #>
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $FOS_ZoneCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $FOS_ZoneCollection | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
+        }else {
+            <# output on the promt #>
+            return $FOS_ZoneCollection
+        }
+        Write-Debug -Message "$(Get-Date) return:`n $FOS_ZoneCollection `n "
+        Write-Debug -Message "$(Get-Date) return:`n $FOS_ZoneName `n "
 
-        Write-Host $FOS_ZoneName -ForegroundColor Red
-        return $FOS_ZoneCollection, $FOS_ZoneName
-        # clear the most of the used vars
-        Write-Debug -Message "End block |$(Get-Date)"
+        <# FOS_usedPorts commented out can be used later via filter option if necessary #>
+        return $FOS_ZoneCollection, $FOS_ZoneName 
+        
     }
 }
