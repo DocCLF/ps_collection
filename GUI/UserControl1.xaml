@@ -46,6 +46,11 @@
             <StackPanel>
                 <!--IBM_HostVolumeMap-->
                 <Button
+                x:Name="btn_IBM_Eventlog"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Eventlog" />
+                <!--IBM_HostVolumeMap-->
+                <Button
                 x:Name="btn_IBM_HostVolumeMap"
                 Style="{StaticResource MainBtnStyle}"
                 Content="Host Volume Info" />
@@ -64,6 +69,38 @@
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
+                <StackPanel x:Name="stp_StorageEventLog" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0" >
+                            <Label Content="Device 1" />
+                            <DataGrid Name="lb_StorageEventLogOne" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1"  >
+                            <Label Content="Device 2" />
+                            <DataGrid Name="lb_StorageEventLogTwo" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0"  >
+                            <Label Content="Device 3" />
+                            <DataGrid Name="lb_StorageEventLogThree" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" >
+                            <Label Content="Device 4" />
+                            <DataGrid Name="lb_StorageEventLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
                 <StackPanel  x:Name="stp_HostVolInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_HostVolumeMap, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -90,6 +127,7 @@
                                 <GridView>
                                     <GridViewColumn Header="HostID"  DisplayMemberBinding ="{Binding HostID}"/>  
                                     <GridViewColumn Header="HostName" DisplayMemberBinding ="{Binding HostName}"/>  
+                                    <GridViewColumn Header="HostClusterID" DisplayMemberBinding ="{Binding HostClusterID}"/>
                                     <GridViewColumn Header="HostCluster" DisplayMemberBinding ="{Binding HostCluster}"/>
                                     <GridViewColumn Header="VolumeID"  DisplayMemberBinding ="{Binding VolumeID}"/>  
                                     <GridViewColumn Header="VolumeName" DisplayMemberBinding ="{Binding VolumeName}"/>  
@@ -112,6 +150,7 @@
                                 <GridView>
                                     <GridViewColumn Header="HostID"  DisplayMemberBinding ="{Binding HostID}"/>  
                                     <GridViewColumn Header="HostName" DisplayMemberBinding ="{Binding HostName}"/>  
+                                    <GridViewColumn Header="HostClusterID" DisplayMemberBinding ="{Binding HostClusterID}"/>
                                     <GridViewColumn Header="HostCluster" DisplayMemberBinding ="{Binding HostCluster}"/>
                                     <GridViewColumn Header="VolumeID"  DisplayMemberBinding ="{Binding VolumeID}"/>  
                                     <GridViewColumn Header="VolumeName" DisplayMemberBinding ="{Binding VolumeName}"/>  
