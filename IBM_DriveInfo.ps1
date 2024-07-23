@@ -71,7 +71,7 @@ function IBM_DriveInfo {
                 $TD_CollectInfosTemp = $TD_CollectInfos |Select-Object -Skip $_
                 if([string]::IsNullOrEmpty($TD_TransProt)){
                     $TD_TransProt = (($TD_CollectInfos|Select-String -Pattern '^transport_protocol\s+(\w+)' -AllMatches).Matches.Groups[1].Value)
-                    Write-Host $TD_TransProt -ForegroundColor Red
+                    #Write-Host $TD_TransProt -ForegroundColor Red
                 }
             }
         }

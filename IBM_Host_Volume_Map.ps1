@@ -80,7 +80,6 @@ function IBM_Host_Volume_Map {
         foreach($line in $TD_CollectVolInfo){
             <# creates the objects for the array #>
             $TD_SplitInfos = "" | Select-Object HostID,HostName,HostClusterID,HostCluster,VolumeID,VolumeName,UID,Capacity
-            #Write-Host $line -ForegroundColor Green
             if($i -ge 1){
                 if($FilterType -eq "Host"){
                     $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
@@ -88,7 +87,7 @@ function IBM_Host_Volume_Map {
                     $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
                     $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
                     $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
-                    Write-Host $TD_HostIDold $TD_SplitInfos.HostID -ForegroundColor Blue
+
                     $TD_HostIDold = $TD_SplitInfos.HostID
                     $FilterTypeHost =$true
                 }
@@ -143,18 +142,17 @@ function IBM_Host_Volume_Map {
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
                 $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             }else {
                 $TD_Mappingresault | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                Write-Host "The Export can be found at $PSScriptRoot\Export\ " -ForegroundColor Green
             }
-            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $TD_Mappingresault
         }
         return $TD_Mappingresault #|Select-Object -Skip 1
-        <# wait a moment #>
-        Start-Sleep -Seconds 1
         <# Cleanup all TD* Vars #>
         #Clear-Variable TD* -Scope Global
     }
