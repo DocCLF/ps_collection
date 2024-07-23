@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="PSWH Collection" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen">
+        Title="PSWH Collection" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
@@ -43,6 +43,10 @@
         </StackPanel>
         <!--CloseAll GUI-->
         <Button x:Name="btn_CloseAll" Content="Exit" Style="{StaticResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
-        <Grid Grid.Row="1" x:Name="UserContrArea" />
+        <Grid Grid.Row="1" x:Name="UserContrArea" > 
+            <StackPanel>
+                <Image x:Name="LogoImage" Source="/Resources/PowerShell_7_Banner.png" /> 
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

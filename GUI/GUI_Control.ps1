@@ -73,7 +73,8 @@ foreach($file in $UserCxamlFile){
 
 <# Set some Vars #>
 $TD_tb_Exportpath.Text = "$PSRootPath\Export\"
-
+<# MainWindow Background IMG #>
+$TD_LogoImage.Source = "$PSRootPath\Resources\PowerShell_7_Banner.png"
 #$TD_tb_sanIPAdr             
 #$TD_tb_sanIPAdrOne          
 #$TD_tb_sanIPAdrThree        
