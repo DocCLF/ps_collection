@@ -82,6 +82,8 @@ function FOS_PortLicenseShowInfo {
         }
 
         return $TD_Resaults 
-        
+
+        <# Cleanup all TD* Vars #>
+        Clear-Variable FOS* -Scope Global
     }
 }

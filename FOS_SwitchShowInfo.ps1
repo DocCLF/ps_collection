@@ -43,7 +43,6 @@ function FOS_SwitchShowInfo {
         if($TD_Device_ConnectionTyp -eq "ssh"){
             $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "switchshow"
         }else {
-            Write-Host "plink"
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "switchshow"
         }
         <# next line one for testing #>
@@ -126,6 +125,8 @@ function FOS_SwitchShowInfo {
 
         <# FOS_usedPorts commented out can be used later via filter option if necessary #>
         return $FOS_SwBasicPortDetails #, $FOS_usedPorts 
-        
+
+        <# Cleanup all TD* Vars #>
+        Clear-Variable FOS* -Scope Global
     }
 }

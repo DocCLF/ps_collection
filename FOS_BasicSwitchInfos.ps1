@@ -121,5 +121,8 @@ function FOS_BasicSwitchInfos {
         Write-Debug -Message "End Func GET_BasicSwitchInfos |$(Get-Date)` "
         Write-Debug -Message "return $FOS_SwGeneralInfos ` $(Get-Date)` "
         return $FOS_SwGeneralInfos
+        
+        <# Cleanup all TD* Vars #>
+        Clear-Variable FOS* -Scope Global
     }
 }

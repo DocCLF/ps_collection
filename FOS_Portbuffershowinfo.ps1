@@ -116,5 +116,8 @@ function FOS_PortbufferShowInfo {
 
         return $FOS_pbs
         
+        <# Cleanup all TD* Vars #>
+        Clear-Variable FOS* -Scope Global  
+        
     }
 }

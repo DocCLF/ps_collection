@@ -149,5 +149,7 @@ function FOS_ZoneDetails  {
         <# FOS_usedPorts commented out can be used later via filter option if necessary #>
         return $FOS_ZoneCollection, $FOS_ZoneName 
         
+        <# Cleanup all TD* Vars #>
+        Clear-Variable FOS* -Scope Global
     }
 }

@@ -148,6 +148,8 @@ function FOS_PortErrShowInfos {
         }
 
         return $FOS_PortErrShowfiltered
-        
+
+        <# Cleanup all TD* Vars #>
+        Clear-Variable FOS* -Scope Global
     }
 }
