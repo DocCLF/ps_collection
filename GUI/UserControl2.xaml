@@ -72,7 +72,7 @@
                 <Button
                 x:Name="btn_FOS_PortLicenseShow"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Port License Show" 
+                Content="License/ -Port Show" 
                 ToolTip="Click to submit your information"/>
                 <!--FOS_ZoneDetails-->
                 <Button

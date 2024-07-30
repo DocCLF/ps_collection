@@ -44,7 +44,7 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.RowSpan="2" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
             <StackPanel>
-                <!--IBM_HostVolumeMap-->
+                <!--IBM_EventLog-->
                 <Button
                 x:Name="btn_IBM_Eventlog"
                 Style="{StaticResource MainBtnStyle}"
@@ -64,6 +64,11 @@
                 x:Name="btn_IBM_FCPortStats"
                 Style="{StaticResource MainBtnStyle}"
                 Content="FC-Port Info" />
+                <!--IBM_BackUpConfig-->
+                <Button
+                x:Name="btn_IBM_BackUpConfig"
+                Style="{StaticResource MainBtnStyle}"
+                Content="BackUp CFG" />
             </StackPanel>
         </GroupBox>       
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
@@ -384,6 +389,44 @@
                         </StackPanel>  
                     </Grid>
                 </StackPanel>   
+                <StackPanel  x:Name="stp_BackUpConfig" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BackUpConfig, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0" >
+                            <Label Content="Device 1" />
+                            <TextBlock x:Name="tb_BackUpInfoDevice" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" >
+                            <Label Content="Device 2" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceTwo" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" >
+                            <Label Content="Device 3" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceThree" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" >
+                            <Label Content="Device 4" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceFour" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
+                            <Label Content="Exported Files" Margin="0"/>
+                            <TextBlock x:Name="tb_BackUpFileErrorInfo" TextWrapping="Wrap" MaxWidth="600" Text="" Margin="5,0,5,5"/>
+                            <DataGrid Name="tb_BackUpFileInfoDevice" AutoGenerateColumns="False" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="FileName" Binding="{Binding Name}" IsReadOnly="True"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>  
                 </Grid> 
             </ScrollViewer>
         </GroupBox>

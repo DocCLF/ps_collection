@@ -113,12 +113,16 @@ function Get_CredGUIInfos {
     #Write-Host $TD_IPConnectionTest.Status -ForegroundColor Yellow
     #if(($TD_IPCheck)-and($TD_IPConnectionTest.Status-eq "Success")){
     if(($TD_IPCheck)){    
-        if((($TD_cb_storageSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")){
+        if((!($TD_cb_storageSamePW.IsChecked))-and($TD_ConnectionTyp -eq "plink")){
                 $TD_StoragePassword=$TD_tb_storagePassword
+        }elseif ((($TD_cb_storageSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")) {
+            $TD_StoragePassword=$TD_Password
         }elseif (($TD_ConnectionTyp -eq "ssh")) {
             $TD_StoragePassword=""
         }
-        if((($TD_cb_sanSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")){
+        if((!($TD_cb_sanSamePW.IsChecked))-and($TD_ConnectionTyp -eq "plink")){
+            $TD_SANPassword=$TD_Password
+        }elseif ((($TD_cb_sanSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")) {
             $TD_SANPassword=$TD_tb_sanPassword
         }elseif (($TD_ConnectionTyp -eq "ssh")) {
             $TD_SANPassword=""
@@ -568,6 +572,7 @@ $TD_btn_IBM_Eventlog.add_click({
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_StorageEventLog.Visibility="Visible"
 })
 
@@ -614,6 +619,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_StorageEventLog.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
 })
 
@@ -672,6 +678,7 @@ $TD_btn_IBM_DriveInfo.add_click({
     $TD_stp_HostVolInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_StorageEventLog.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_DriveInfo.Visibility="Visible"
     #Write-Host $TD_Credentials[0] `n $TD_Credentials[1] `n $TD_Credentials[2] `n $TD_Credentials[3] `n
 })
@@ -730,8 +737,173 @@ $TD_btn_IBM_FCPortStats.add_click({
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Collapsed"
     $TD_stp_StorageEventLog.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Visible"
     
+})
+
+$TD_btn_IBM_BackUpConfig.add_click({
+    $ErrorActionPreference="Continue"
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate because Grouping dose not work #>
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {            
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_BUInfoOne = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_BUInfoOne = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+            }
+            {($_ -eq 2)} 
+            {            
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_BUInfoTwo = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_BUInfoTwo = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
+                    }
+                }
+            }
+            {($_ -eq 3)} 
+            {            
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_BUInfoThree = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_BUInfoThree = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
+                    }
+                }
+            }
+            {($_ -eq 4)} 
+            {            
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_BUInfoFour = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_BUInfoFour = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
+                        Start-Sleep -Seconds 0.5
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
+                    }
+                }
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+    try {
+        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text
+        #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
+        $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
+        <# maybe add a filter #>
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_tb_BackUpFileErrorInfo.Text = $_.Exception.Message
+    }
+    $TD_stp_DriveInfo.Visibility="Collapsed"
+    $TD_stp_HostVolInfo.Visibility="Collapsed"
+    $TD_stp_StorageEventLog.Visibility="Collapsed"
+    $TD_stp_FCPortStats.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Visible"
 })
 
 <#SAN Button#>

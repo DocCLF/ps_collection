@@ -8,7 +8,7 @@ function FOS_SwitchShowInfo {
     .NOTES
         Need infos to be added   
     .LINK
-        Brocade® Fabric OS® Command Reference Manual, 9.2.x
+        BrocadeÂ® Fabric OSÂ® Command Reference Manual, 9.2.x
         https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-commands/9-2-x/Fabric-OS-Commands/switchShow_921.html
     .EXAMPLE
         GET_BasicSwitchInfos -FOS_MainInformation $yourvarobject
@@ -79,7 +79,7 @@ function FOS_SwitchShowInfo {
                 <# Port number; 0-15, 0-31, or 0-63. #>
                 $FOS_SWsh.Port = ($FOS_linebyLine |Select-String -Pattern '^\s+\d+\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
                 <# The 24-bit Address Identifier. #>
-                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '(\d+[a-z]+\d+|\d+)' -AllMatches).Matches.Value[3]
+                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([0-9a-z]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# Media types means module types #>
                 $FOS_SWsh.Media = ($FOS_linebyLine |Select-String -Pattern '\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# The speed of the port. #>
@@ -96,7 +96,37 @@ function FOS_SwitchShowInfo {
                 }else{
                     $FOS_SWsh.PortConnect = ($FOS_linebyLine |Select-String -Pattern '\s+(FC)\s+([A-Za-z-]+\s+([0-9a-f]{2}:){7}[0-9a-f]{2}|\(.*\)|[A-Za-z-]+.*)' -AllMatches).Matches.Groups.Value[2]
                 }
-                $FOS_SwBasicPortDetails += $FOS_SWsh
+                
+                if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                    if($TD_Device_ConnectionTyp -eq "ssh"){
+                        $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
+
+                        foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
+                            $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
+                            if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
+                                $FOS_SwBasicPortDetails += $FOS_SWsh
+                                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
+                                $FOS_SWsh.PortConnect = $FOS_NPIV_Info
+                                $FOS_NPIV_Info_temp = $FOS_NPIV_Info
+                                }
+                        }
+                    }else {
+                        $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
+
+                        foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
+                            $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
+                            if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
+                                $FOS_SwBasicPortDetails += $FOS_SWsh
+                                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
+                                $FOS_SWsh.PortConnect = $FOS_NPIV_Info
+                                $FOS_NPIV_Info_temp = $FOS_NPIV_Info
+                                }
+                        }
+                    }
+                }else{
+                    $FOS_SwBasicPortDetails += $FOS_SWsh
+                }
+                
             }
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
             if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}
