@@ -98,6 +98,7 @@ function FOS_SwitchShowInfo {
                 }
                 
                 if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                    <# need a better way to connect #>
                     if($TD_Device_ConnectionTyp -eq "ssh"){
                         $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
 
