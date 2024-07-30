@@ -36,6 +36,7 @@ function FOS_PortLicenseShowInfo {
         if($TD_Device_ConnectionTyp -eq "ssh"){
            Write-Debug -Message "ssh |$(Get-Date)"
            if($TD_FOSVersion -eq "FOS 9.x"){
+                <# Improved Command for more details #>
               $FOS_PortLicenseInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "license --show && license --show -port"
            }else {
               $FOS_PortLicenseInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "licenseShow"
