@@ -35,8 +35,9 @@
             <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{StaticResource MainBtnStyle}"/>
             <!--Brocade SAN-->
             <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{StaticResource MainBtnStyle}" />
-            <!--Storage + SAN-->
-            <Button x:Name="btn_Stor_San" Content="Storage + SAN" Style="{StaticResource MainBtnStyle}" />
+            <!-- Placeholder for later use -->
+            <!--Storage + SAN
+            <Button x:Name="btn_Stor_San" Content="Storage + SAN" Style="{StaticResource MainBtnStyle}" /> -->
             <!--Settings-->
             <Button x:Name="btn_Settings" Content="Tool Settings" Style="{StaticResource MainBtnStyle}" />
             <Label x:Name="label_ExpPath" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
