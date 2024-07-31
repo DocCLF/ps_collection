@@ -575,6 +575,64 @@ $TD_btn_IBM_Eventlog.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_StorageEventLog.Visibility="Visible"
 })
+<#
+$TD_btn_IBM_CatAuditLog.add_click({
+
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        #$TD_IBM_EventLogShow =@()
+        #Write-Debug -Message $TD_Credential
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+                $TD_IBM_CatAuditLogShow += IBM_CatAuditLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 1
+                $TD_lb_StorageAuditLogOne.ItemsSource = $TD_IBM_CatAuditLogShow
+            }
+            {($_ -eq 2) }
+            {            
+                $TD_IBM_CatAuditLogShow += IBM_CatAuditLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 1
+                $TD_lb_StorageAuditLogTwo.ItemsSource = $TD_IBM_CatAuditLogShow
+            }
+            {($_ -eq 3) }
+            {            
+                $TD_IBM_CatAuditLogShow += IBM_CatAuditLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 1
+                $TD_lb_StorageAuditLogThree.ItemsSource = $TD_IBM_CatAuditLogShow
+            }
+            {($_ -eq 4) }
+            {            
+                $TD_IBM_CatAuditLogShow += IBM_CatAuditLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 1
+                $TD_lb_StorageAuditLogFour.ItemsSource = $TD_IBM_CatAuditLogShow
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+    $TD_stp_DriveInfo.Visibility="Collapsed"
+    $TD_stp_FCPortStats.Visibility="Collapsed"
+    $TD_stp_HostVolInfo.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Collapsed"
+    $TD_stp_StorageEventLog.Visibility="Collapsed"
+    $TD_stp_StorageAuditLog.Visibility="Visible"
+}) #>
 
 $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_Credentials=@()
