@@ -43,7 +43,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="2" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
+        <GroupBox Grid.Column="0" Grid.RowSpan="2" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
                 <!--FOS_Versio-->
                 <ComboBox
@@ -94,7 +94,7 @@
                 ToolTip="Click to refresh"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="Resaults"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
+        <GroupBox Grid.Column="1" Grid.RowSpan="2" Header="Resaults"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
             <Grid>
             <StackPanel x:Name="stp_sanBasicSwitchInfo" Margin="2" Visibility="{Binding ElementName=btn_FOS_BasicSwitchInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
