@@ -74,18 +74,30 @@
                     <TextBox x:Name="tb_storageIPAdr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
                     <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
                     <TextBox x:Name="tb_storageUserName" MaxLength="20" MinWidth="100" Style="{StaticResource MainTextBoxStyle}" />
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTyp, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_storagePassword" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTyp, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
+                    <Label  Content="SVC-Cluster?" Style="{StaticResource MainLabelStyle}"/>
+                    <CheckBox x:Name="cb_StorageSVCone" VerticalAlignment="Center" Margin="2"/>
                     <ToggleButton x:Name="tbn_storageaddrmLine" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1" x:Name="stp_storagePanel2" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_storageaddrmLine, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
@@ -107,16 +119,29 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypOne, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_storagePasswordOne" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypOne, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -143,16 +168,29 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypTwo, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_storagePasswordTwo" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypTwo, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -179,16 +217,29 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypThree, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_storagePasswordThree" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypThree, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageSamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -234,13 +285,23 @@
                     <TextBox x:Name="tb_sanIPAdr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
                     <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}" />
                     <TextBox x:Name="tb_sanUserName" MaxLength="20" MinWidth="100" Style="{StaticResource MainTextBoxStyle}" />
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}" />
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTyp, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_sanPassword" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30" >
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTyp, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -267,16 +328,29 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypOne, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_sanPasswordOne" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypOne, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -303,16 +377,29 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypTwo, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_sanPasswordTwo" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypTwo, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -339,16 +426,29 @@
                             </Style>
                         </TextBox.Style>
                     </TextBox>
-                    <Label Content="Password :" Style="{StaticResource MainLabelStyle}"/>
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypThree, Path=SelectedValue}" Value="ssh">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
                     <PasswordBox x:Name="tb_sanPasswordThree" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30" >
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanConnectionTypThree, Path=SelectedValue}" Value="ssh">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding ElementName=cb_sanSamePW, Path=IsChecked}" Value="True">
-                                        <Setter Property="Visibility" Value="Hidden"/>
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
