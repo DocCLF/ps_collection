@@ -49,6 +49,11 @@
                 x:Name="btn_IBM_Eventlog"
                 Style="{StaticResource MainBtnStyle}"
                 Content="Eventlog" />
+                <!--IBM_CatAuditLog
+                <Button
+                x:Name="btn_IBM_CatAuditLog"
+                Style="{StaticResource MainBtnStyle}"
+                Content="CatAuditLog" /> -->
                 <!--IBM_HostVolumeMap-->
                 <Button
                 x:Name="btn_IBM_HostVolumeMap"
@@ -102,6 +107,38 @@
                         <StackPanel Grid.Row="1" Grid.Column="1" >
                             <Label Content="Device 4" />
                             <DataGrid Name="lb_StorageEventLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                <StackPanel x:Name="stp_StorageAuditLog" Margin="2" Visibility="{Binding ElementName=btn_IBM_CatAuditLog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Grid.Column="0" >
+                            <Label Content="Device 1" />
+                            <DataGrid Name="lb_StorageAuditLogOne" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1"  >
+                            <Label Content="Device 2" />
+                            <DataGrid Name="lb_StorageAuditLogTwo" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0"  >
+                            <Label Content="Device 3" />
+                            <DataGrid Name="lb_StorageAuditLogThree" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" >
+                            <Label Content="Device 4" />
+                            <DataGrid Name="lb_StorageAuditLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
                             </DataGrid>
                         </StackPanel>
                     </Grid>
