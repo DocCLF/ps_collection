@@ -402,19 +402,19 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0" >
                             <Label Content="Device 1" />
-                            <TextBlock x:Name="tb_BackUpInfoDevice" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceOne" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1" >
                             <Label Content="Device 2" />
-                            <TextBlock x:Name="tb_BackUpInfoDeviceTwo" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceTwo" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0" >
                             <Label Content="Device 3" />
-                            <TextBlock x:Name="tb_BackUpInfoDeviceThree" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceThree" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" >
                             <Label Content="Device 4" />
-                            <TextBlock x:Name="tb_BackUpInfoDeviceFour" TextWrapping="Wrap" MaxWidth="300" Text="" />
+                            <TextBlock x:Name="tb_BackUpInfoDeviceFour" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
                             <Label Content="Exported Files" Margin="0"/>
