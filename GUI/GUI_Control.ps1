@@ -766,12 +766,13 @@ $TD_btn_IBM_BackUpConfig.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {            
+                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_BUInfoOne = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne
+                        $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -781,10 +782,10 @@ $TD_btn_IBM_BackUpConfig.add_click({
                     }
                 }else{
                     try {
-                        $TD_BUInfoOne = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne
+                        $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -796,12 +797,13 @@ $TD_btn_IBM_BackUpConfig.add_click({
             }
             {($_ -eq 2)} 
             {            
+                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_BUInfoTwo = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_BUInfoTwo = ssh $StorageUserName@$Device_IP "svcconfig backup"
                         $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -811,10 +813,10 @@ $TD_btn_IBM_BackUpConfig.add_click({
                     }
                 }else{
                     try {
-                        $TD_BUInfoTwo = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_BUInfoTwo = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
                         $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -826,12 +828,13 @@ $TD_btn_IBM_BackUpConfig.add_click({
             }
             {($_ -eq 3)} 
             {            
+                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_BUInfoThree = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_BUInfoThree = ssh $StorageUserName@$Device_IP "svcconfig backup"
                         $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -841,10 +844,10 @@ $TD_btn_IBM_BackUpConfig.add_click({
                     }
                 }else{
                     try {
-                        $TD_BUInfoThree = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_BUInfoThree = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
                         $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -856,12 +859,13 @@ $TD_btn_IBM_BackUpConfig.add_click({
             }
             {($_ -eq 4)} 
             {            
+                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_BUInfoFour = ssh $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) "svcconfig backup"
+                        $TD_BUInfoFour = ssh ssh $StorageUserName@$Device_IP "svcconfig backup"
                         $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -871,10 +875,10 @@ $TD_btn_IBM_BackUpConfig.add_click({
                     }
                 }else{
                     try {
-                        $TD_BUInfoFour = plink $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress) -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
+                        $TD_BUInfoFour = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
                         $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
                         Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $($TD_Credential.StorageUserName)@$($TD_Credential.IPAddress):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
+                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
@@ -890,6 +894,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
     try {
         $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text
         #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
+        #$TD_tb_BackUpFileErrorInfo.Text = $TD_tb_Exportpath
         $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
         <# maybe add a filter #>
     }
