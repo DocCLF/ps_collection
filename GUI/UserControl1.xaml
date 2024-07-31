@@ -42,7 +42,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="2" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,10,0,0">
+        <GroupBox Grid.Column="0" Grid.RowSpan="2" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
                 <!--IBM_EventLog-->
                 <Button
@@ -315,10 +315,6 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
-                        <ComboBox x:Name="cb_FCPortStats" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
-                            <ComboBoxItem>FSystem</ComboBoxItem>
-                            <ComboBoxItem>SVC</ComboBoxItem>
-                        </ComboBox>
                         <!--Button need a implem. for more as one Storage  -->
                         <!-- <Button x:Name="btn_UpFilFCPS" Style="{StaticResource MainBtnStyle}" Content="Update Filter" /> -->
                         <!--Label need a better place to avoid repetition of code
