@@ -51,7 +51,7 @@ function FOS_ZoneDetails  {
             }
         }
         $FOS_ZoneName = (($FOS_ZoneList | Select-String -Pattern '\s+cfg:\s+(.*)' |ForEach-Object {$_.Matches.Groups[1].Value}))
-
+        $FOS_ZoneName = $FOS_ZoneName.Trim()
         Write-Debug -Message "`nZoneliste`n $FOS_ZoneList,`nZoneName`n $FOS_ZoneName,`nZoneCount`n $FOS_ZoneCollection "
         
     }
