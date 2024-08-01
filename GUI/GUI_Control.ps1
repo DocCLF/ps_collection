@@ -286,13 +286,14 @@ $TD_btn_Broc_SAN.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
 })
+<#
 $TD_btn_Stor_San.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
-})
+})#>
 $TD_btn_Settings.add_click({
     if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
