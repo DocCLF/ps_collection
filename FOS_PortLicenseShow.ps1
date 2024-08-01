@@ -71,9 +71,9 @@ function FOS_PortLicenseShowInfo {
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_Resaults | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $TD_Resaults
             }else {
-                $TD_Resaults | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                Out-File -FilePath $PSScriptRoot\Export\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $TD_Resaults
             }
             Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
