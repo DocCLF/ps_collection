@@ -1,5 +1,3 @@
-
-
 function FOS_PortErrShowInfos {
     <#
     .SYNOPSIS

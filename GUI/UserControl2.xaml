@@ -313,8 +313,16 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" >
+                      <Button x:Name="btn_StatsClear" Style="{StaticResource MainBtnStyle}" Content="Stats Clear" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
+                      <Label x:Name="lb_OneClear" Content="One Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_TwoClear" Content="Two Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_ThreeClear" Content="Three Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_FourClear" Content="Four Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
                         <ListView x:Name="lb_PortErrorShowOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
@@ -352,7 +360,7 @@
                             </ListView.View>
                         </ListView >
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                    <StackPanel Grid.Row="1" Grid.Column="2"  >
                         <Label Content="Switch 2" />
                         <ListView x:Name="lb_PortErrorShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
@@ -390,7 +398,7 @@
                             </ListView.View>
                         </ListView >
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
                         <ListView x:Name="lb_PortErrorShowThree" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
@@ -428,7 +436,7 @@
                             </ListView.View>
                         </ListView >
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
                         <ListView x:Name="lb_PortErrorShowFour" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>

@@ -1193,7 +1193,7 @@ $TD_btn_FOS_PortLicenseShow.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+            {   
                 $TD_FOS_PortLicenseShow += FOS_PortLicenseShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 1
                 $TD_lb_SANInfoOne.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
@@ -1229,6 +1229,7 @@ $TD_btn_FOS_PortLicenseShow.add_click({
 
 })
 
+<# Unnecessary duplicated code with TD_btn_StatsClear, needs a better implementation but for the first step it's okay. #>
 $TD_btn_FOS_PortErrorShow.add_click({
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
@@ -1253,18 +1254,18 @@ $TD_btn_FOS_PortErrorShow.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+            {   
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowOne.ItemsSource =$TD_FOS_PortErrShow
             }
-            {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 2) } 
             {            
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowTwo.ItemsSource =$TD_FOS_PortErrShow
             }
-            {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 3) } 
             {            
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
@@ -1289,6 +1290,173 @@ $TD_btn_FOS_PortErrorShow.add_click({
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Visible"
+})
+<# Unnecessary duplicated code with TD_btn_FOS_PortErrorShow, needs a better implementation but for the first step it's okay. #>
+$TD_btn_StatsClear.add_click({
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_sanConnectionTypOne.Text -TD_IPAdresse $TD_tb_sanIPAdrOne.Text -TD_UserName $TD_tb_sanUserNameOne.Text -TD_Password $TD_tb_sanPasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_sanConnectionTypTwo.Text -TD_IPAdresse $TD_tb_sanIPAdrTwo.Text -TD_UserName $TD_tb_sanUserNameTwo.Text -TD_Password $TD_tb_sanPasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate because Grouping dose not work #>
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {            
+                $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        Write-Host $TD_FOS_StatsClear
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($TD_Credential.SANPassword) -batch "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowOne.ItemsSource = $EmptyVar
+                    $TD_lb_OneClear.Visibility = "Visible"
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowOne.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            {($_ -eq 2)} 
+            {            
+                $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($TD_Credential.SANPassword) -batch "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowTwo.ItemsSource = $EmptyVar
+                    $TD_lb_TwoClear.Visibility = "Visible"
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowTwo.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            {($_ -eq 3)} 
+            {            
+                $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($TD_Credential.SANPassword) -batch "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowThree.ItemsSource = $EmptyVar
+                    $TD_lb_ThreeClear.Visibility = "Visible"
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowThree.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            {($_ -eq 4)} 
+            {            
+                $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($TD_Credential.SANPassword) -batch "statsClear"
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowFour.ItemsSource = $EmptyVar
+                    $TD_lb_FourClear.Visibility = "Visible"
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowFour.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
 })
 
 $TD_btn_FOS_PortBufferShow.add_click({
@@ -1315,18 +1483,18 @@ $TD_btn_FOS_PortBufferShow.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+            {   
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortBufferShowOne.ItemsSource =$TD_FOS_PortbufferShow
             }
-            {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 2) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortBufferShowTwo.ItemsSource =$TD_FOS_PortbufferShow
             }
-            {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 3) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
@@ -1343,7 +1511,6 @@ $TD_btn_FOS_PortBufferShow.add_click({
     }
 
     <#Chang to correct Content etc.#>
-    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
     Start-Sleep -Seconds 0.5
     $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
     $TD_stp_sanLicenseShow.Visibility="Collapsed"
