@@ -432,24 +432,28 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <StackPanel Grid.Row="0" >
+                            <Button x:Name="btn_IBM_CleanUpConfigDir" Style="{StaticResource MainBtnStyle}" Content="Stats Clear" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" >
                             <Label Content="Device 1" />
                             <TextBlock x:Name="tb_BackUpInfoDeviceOne" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1" >
+                        <StackPanel Grid.Row="1" Grid.Column="1" >
                             <Label Content="Device 2" />
                             <TextBlock x:Name="tb_BackUpInfoDeviceTwo" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="0" >
+                        <StackPanel Grid.Row="2" Grid.Column="0" >
                             <Label Content="Device 3" />
                             <TextBlock x:Name="tb_BackUpInfoDeviceThree" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="1" >
+                        <StackPanel Grid.Row="2" Grid.Column="1" >
                             <Label Content="Device 4" />
                             <TextBlock x:Name="tb_BackUpInfoDeviceFour" TextWrapping="Wrap" MaxWidth="400" Text="" />
                         </StackPanel>
-                        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" >
+                        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" >
                             <Label Content="Exported Files" Margin="0"/>
                             <TextBlock x:Name="tb_BackUpFileErrorInfo" TextWrapping="Wrap" MaxWidth="600" Text="" Margin="5,0,5,5"/>
                             <DataGrid Name="tb_BackUpFileInfoDevice" AutoGenerateColumns="False" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
