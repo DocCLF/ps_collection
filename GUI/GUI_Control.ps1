@@ -1489,6 +1489,8 @@ $TD_btn_StatsClear.add_click({
                 if($TD_FOS_StatsClearDone){
                     $TD_lb_PortErrorShowOne.ItemsSource = $EmptyVar
                     $TD_lb_OneClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
                     $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_lb_PortErrorShowOne.ItemsSource =$TD_FOS_PortErrShow
@@ -1524,6 +1526,8 @@ $TD_btn_StatsClear.add_click({
                 if($TD_FOS_StatsClearDone){
                     $TD_lb_PortErrorShowTwo.ItemsSource = $EmptyVar
                     $TD_lb_TwoClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
                     $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_lb_PortErrorShowTwo.ItemsSource =$TD_FOS_PortErrShow
@@ -1559,6 +1563,8 @@ $TD_btn_StatsClear.add_click({
                 if($TD_FOS_StatsClearDone){
                     $TD_lb_PortErrorShowThree.ItemsSource = $EmptyVar
                     $TD_lb_ThreeClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
                     $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_lb_PortErrorShowThree.ItemsSource =$TD_FOS_PortErrShow
@@ -1594,6 +1600,8 @@ $TD_btn_StatsClear.add_click({
                 if($TD_FOS_StatsClearDone){
                     $TD_lb_PortErrorShowFour.ItemsSource = $EmptyVar
                     $TD_lb_FourClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
                     $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_lb_PortErrorShowFour.ItemsSource =$TD_FOS_PortErrShow
