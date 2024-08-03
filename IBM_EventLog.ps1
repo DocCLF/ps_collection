@@ -1,16 +1,13 @@
 function IBM_EventLog {
     <#
     .SYNOPSIS
-    Get SAN-Switch License Infos 
 
     .DESCRIPTION
 
     .EXAMPLE
-    FOS_Port_LicenseShow -UserName admin -SwitchIP 10.10.10.25
 
     .LINK
-    Brocade® Fabric OS® Command Reference Manual, 9.1.x
-    https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-commands/9-1-x/Fabric-OS-Commands.html
+
     #>
     [CmdletBinding()]
     param (

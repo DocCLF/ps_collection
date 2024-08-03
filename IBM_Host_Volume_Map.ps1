@@ -88,7 +88,7 @@ function IBM_Host_Volume_Map {
                     $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
                     $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
 
-                    $TD_HostIDold = $TD_SplitInfos.HostID
+                    #$TD_HostIDold = $TD_SplitInfos.HostID
                     $FilterTypeHost =$true
                 }
                 elseif(((($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9])-ne "scsi")-and ($FilterType -eq "Hostcluster")){
