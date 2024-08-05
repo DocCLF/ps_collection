@@ -5,7 +5,103 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     >
-    <Grid Margin="10">
-
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
+                <Setter Property="Height" Value="25" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="Height" Value="25" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="AntiqueWhite">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" >
+            <Button x:Name="btn_Storage_SysCheck" Content="Storage System Check" Style="{StaticResource MainBtnStyle}" Margin="10,20,25,5"/>
+            <ComboBox Margin="25,20,20,5" x:Name="cb_Device_HealthCheck" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                <!--<ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check all Storages</ComboBoxItem>-->
+                <ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check the First</ComboBoxItem>
+                <ComboBoxItem ToolTip="Check Storages">Check the Second</ComboBoxItem>
+                <ComboBoxItem ToolTip="Check Storages">Check the Third</ComboBoxItem>
+                <ComboBoxItem ToolTip="Check Storages">Check the Fourth</ComboBoxItem>
+            </ComboBox>
+            <Button x:Name="asbas" Content="Open GUI 1" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" Background="Green"/>
+            <Button x:Name="asqqbas" Content="Open GUI 2" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" Background="Yellow"/>
+            <Button x:Name="w" Content="Open GUI 3" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" Background="Green"/>
+            <Button x:Name="e" Content="Open GUI 4" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" Background="red"/>
+        </StackPanel>
+        <Canvas Grid.Row="1">
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Eventlog Check" Margin="10,5,20,5" VerticalAlignment="Center"/>
+                <Ellipse x:Name="el_EventlogStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <DataGrid Name="dg_EventlogStatusInfoText" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                </DataGrid>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Host Check" Margin="10,5,20,5" VerticalAlignment="Center"/>
+                <Ellipse x:Name="el_HostStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <DataGrid Name="dg_HostStatusInfoText" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                </DataGrid>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Eventlog Check" Margin="10,5,20,5" VerticalAlignment="Center"/>
+                <Ellipse Width="25" Height="25" Fill="red" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Yellow" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Green" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <TextBlock TextWrapping="Wrap" MaxWidth="400" MaxHeight="200" Margin="20,5,5,5" Text="This example shows how to draw ellipses and circles by using the Ellipse element. To draw an ellipse, create an Ellipse element and specify its Width and Height. Use its Fill property to specify the Brush that is used to paint the interior of the ellipse. Use its Stroke property to specify the Brush that is used to paint the outline of the ellipse. The StrokeThickness property specifies the thickness of the ellipse outline." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Eventlog Check" Margin="10,5,20,5" VerticalAlignment="Center"/>
+                <Ellipse Width="25" Height="25" Fill="red" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Yellow" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Green" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <TextBlock TextWrapping="Wrap" MaxWidth="400" MaxHeight="200" Margin="20,5,5,5" Text="This example shows how to draw ellipses and circles by using the Ellipse element. To draw an ellipse, create an Ellipse element and specify its Width and Height. Use its Fill property to specify the Brush that is used to paint the interior of the ellipse. Use its Stroke property to specify the Brush that is used to paint the outline of the ellipse. The StrokeThickness property specifies the thickness of the ellipse outline." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Eventlog Check" Margin="10,5,20,5" VerticalAlignment="Center"/>
+                <Ellipse Width="25" Height="25" Fill="red" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Yellow" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Green" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <TextBlock TextWrapping="Wrap" MaxWidth="400" MaxHeight="200" Margin="20,5,5,5" Text="This example shows how to draw ellipses and circles by using the Ellipse element. To draw an ellipse, create an Ellipse element and specify its Width and Height. Use its Fill property to specify the Brush that is used to paint the interior of the ellipse. Use its Stroke property to specify the Brush that is used to paint the outline of the ellipse. The StrokeThickness property specifies the thickness of the ellipse outline." />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <Label Content="Eventlog Check" Margin="10,5,20,5" VerticalAlignment="Center"/>
+                <Ellipse Width="25" Height="25" Fill="red" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Yellow" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <Ellipse Width="25" Height="25" Fill="Green" Stroke="Black" StrokeThickness="2" Margin="0,0,5,0"/>
+                <TextBlock TextWrapping="Wrap" MaxWidth="400" MaxHeight="200" Margin="20,5,5,5" Text="This example shows how to draw ellipses and circles by using the Ellipse element. To draw an ellipse, create an Ellipse element and specify its Width and Height. Use its Fill property to specify the Brush that is used to paint the interior of the ellipse. Use its Stroke property to specify the Brush that is used to paint the outline of the ellipse. The StrokeThickness property specifies the thickness of the ellipse outline." />
+            </StackPanel>
+        </StackPanel>
+        </Canvas>
     </Grid>
 </UserControl>

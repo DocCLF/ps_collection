@@ -114,9 +114,9 @@ function Get_CredGUIInfos {
     #if(($TD_IPCheck)-and($TD_IPConnectionTest.Status-eq "Success")){
     if(($TD_IPCheck)){    
         if((!($TD_cb_storageSamePW.IsChecked))-and($TD_ConnectionTyp -eq "plink")){
-                $TD_StoragePassword=$TD_tb_storagePassword
+                $TD_StoragePassword=$TD_Password
         }elseif ((($TD_cb_storageSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")) {
-            $TD_StoragePassword=$TD_Password
+            $TD_StoragePassword=$TD_tb_storagePassword
         }elseif (($TD_ConnectionTyp -eq "ssh")) {
             $TD_StoragePassword=""
         }
@@ -286,14 +286,13 @@ $TD_btn_Broc_SAN.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
 })
-<#
 $TD_btn_Stor_San.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
-})#>
+})
 $TD_btn_Settings.add_click({
     if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
@@ -790,11 +789,11 @@ $TD_btn_IBM_FCPortStats.add_click({
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_FCPortStatsFour.ItemsSource = $TD_FCPortStats
+            }
+            Default {Write-Debug "Nothing" }
         }
-        Default {Write-Debug "Nothing" }
-    }
     #Write-Host $TD_Host_Volume_Map
-}
+    }
     #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     $TD_stp_DriveInfo.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Collapsed"
@@ -1672,6 +1671,56 @@ $TD_btn_FOS_PortBufferShow.add_click({
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Visible"
+})
+
+$TD_btn_Storage_SysCheck.add_click({
+    $ErrorActionPreference="SilentlyContinue"
+   $TD_Credentials=@()
+   $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
+   $TD_Credentials += $TD_Credentials_Checked
+   Start-Sleep -Seconds 0.5
+
+   $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
+   $TD_Credentials += $TD_Credentials_Checked
+   Start-Sleep -Seconds 0.5
+
+   $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
+   $TD_Credentials += $TD_Credentials_Checked
+   Start-Sleep -Seconds 0.5
+
+   $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
+   $TD_Credentials += $TD_Credentials_Checked
+   Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate because Grouping dose not work #>
+        $TD_SystemCheck = $TD_cb_Device_HealthCheck.Text
+        switch ($TD_SystemCheck) {
+            {(($_ -eq 1) -and ($TD_SystemCheck-eq "Check the First"))} 
+            {            
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+            }
+            {(($_ -eq 2) -and ($TD_SystemCheck-eq "Check the Second"))} 
+            {            
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+            }
+            {(($_ -eq 3) -and ($TD_SystemCheck-eq "Check the Third"))}  
+            {            
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+            }
+            {(($_ -eq 4) -and ($TD_SystemCheck-eq "Check the Fourth"))}  
+            {            
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+    #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    #$TD_stp_DriveInfo.Visibility="Collapsed"
+    #$TD_stp_HostVolInfo.Visibility="Collapsed"
+    #$TD_stp_StorageEventLog.Visibility="Collapsed"
+    #$TD_stp_BackUpConfig.Visibility="Collapsed"
+    #$TD_stp_FCPortStats.Visibility="Visible"
 })
  
 
