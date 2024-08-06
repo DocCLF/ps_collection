@@ -543,18 +543,18 @@ $TD_btn_IBM_Eventlog.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+            {   
                 $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 1
                 $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow
             }
-            {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 2) } 
             {            
                 $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 1
                 $TD_lb_StorageEventLogTwo.ItemsSource = $TD_IBM_EventLogShow
             }
-            {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 3) } 
             {            
                 $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 1
@@ -658,12 +658,12 @@ $TD_btn_IBM_HostVolumeMap.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   Write-Host $TD_Credential.StoragePassword -ForegroundColor Green
+            {   
                 $TD_Host_Volume_Map += IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
             }
-            {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
+            {($_ -eq 2) } 
             {            
                 $TD_Host_Volume_Map += IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
@@ -760,7 +760,11 @@ $TD_btn_IBM_FCPortStats.add_click({
     Start-Sleep -Seconds 0.5
 
     <# if checkbox is checked the first row will used for svc-cluster #>
-    if($TD_cb_StorageSVCone.IsChecked){[string]$TD_cb_FCPortStatsDevice = "SVC"};
+    if($TD_cb_StorageSVCone.IsChecked){
+        [string]$TD_cb_FCPortStatsDevice = "SVC"
+    }else {
+        [string]$TD_cb_FCPortStatsDevice = "FSystem"
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate because Grouping dose not work #>
@@ -1695,7 +1699,7 @@ $TD_btn_Storage_SysCheck.add_click({
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate because Grouping dose not work #>
         $TD_SystemCheck = $TD_cb_Device_HealthCheck.Text
-        switch ($TD_SystemCheck) {
+        switch ($TD_Credential.ID) {
             {(($_ -eq 1) -and ($TD_SystemCheck-eq "Check the First"))} 
             {            
                 IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
